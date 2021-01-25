@@ -1,7 +1,7 @@
 # nnio
 ## Installation:
 ```
-pip install .
+pip install nnio
 ```
 
 ## Low-level API
