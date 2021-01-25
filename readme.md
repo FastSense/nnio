@@ -78,7 +78,10 @@ Example using SSDMobileNetV1 for object detection:
 # Load model
 model = nnio.zoo.onnx.detection.SSDMobileNetV1()
 
-# Pass to the neural network
+# Get preprocessing function
+preproc = model.get_preprocessing()
+
+# Pass image to the neural network
 image_prepared = preproc(image_rgb)
 boxes = model(image_prepared)
 ```
