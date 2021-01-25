@@ -18,8 +18,7 @@ class ONNXModel(Model):
         if utils.is_url(model_path):
             model_path = utils.file_from_url(model_path, 'models')
         # Load model and create inference session
-        import onnxruntime as rt
-        self.sess = rt.InferenceSession(model_path)
+        self.sess = self.make_interpreter(model_path)
 
     def forward(self, *inputs, return_time=False):
         '''
@@ -71,3 +70,11 @@ class ONNXModel(Model):
             }
             for info in self.sess.get_outputs()
         ]
+
+    @staticmethod
+    def make_interpreter(model_path):
+        'Load model and create inference session'
+        import onnxruntime as rt
+        sess = rt.InferenceSession(model_path)
+        return sess
+

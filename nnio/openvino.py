@@ -29,10 +29,7 @@ class OpenVINOModel(Model):
             model_xml = utils.file_from_url(model_xml, 'models')
 
         # Create interpreter
-        from openvino.inference_engine import IECore
-        ie = IECore()
-        self.net = ie.read_network(model_xml, model_bin)
-        self.net = ie.load_network(self.net, device)
+        self.net = self.make_interpreter(model_xml, model_bin, device)
 
     def forward(self, inputs, return_time=False):
         '''
@@ -58,3 +55,21 @@ class OpenVINOModel(Model):
             return out, times
         else:
             return out
+
+    @staticmethod
+    def make_interpreter(model_xml, model_bin, device):
+        'Load model and create openvino interpreter'
+        try:
+            from openvino.inference_engine import IECore
+        except ImportError:
+            print('''
+            Warning: openvino is not installed.
+            
+            Please install openvino or use openvino docker container.
+            ''')
+            raise ImportError
+        ie = IECore()
+        net = ie.read_network(model_xml, model_bin)
+        net = ie.load_network(self.net, device)
+        return net
+

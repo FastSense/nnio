@@ -88,7 +88,26 @@ class EdgeTPUModel(Model):
 
     @staticmethod
     def make_interpreter(model_file, device=None):
-        import tflite_runtime.interpreter as tflite
+        ' Load model and create tflite interpreter '
+        try:
+            import tflite_runtime.interpreter as tflite
+        except ImportError:
+            print('''
+            Warning: tflite_runtime is not installed.
+            
+            Please follow these instructions to install driver:
+            
+            https://coral.ai/docs/m2/get-started/#2a-on-linux
+            
+            And these instructions to install tflite_runtime:
+            
+            https://www.tensorflow.org/lite/guide/python
+            ''')
+            if device is None:
+                print('Trying to use tensorflow version on CPU')
+                import tensorflow.lite as tflite
+            else:
+                raise ImportError
         if device is not None:
             return tflite.Interpreter(
                 model_path=model_file,
