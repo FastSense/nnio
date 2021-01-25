@@ -50,7 +50,7 @@ This is example of using model with EdgeTPU:
 # Create model
 model = nnio.EdgeTPUModel(
     # Model path can be URL:
-    model_path='https://github.com/google-coral/edgetpu/raw/master/test_data/mobilenet_{}_1.0_224_quant.tflite',
+    model_path='https://github.com/google-coral/edgetpu/raw/master/test_data/mobilenet_v2_1.0_224_quant.tflite',
     # Use CPU for now:
     device=None,
 )
