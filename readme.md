@@ -1,5 +1,6 @@
 # nnio
 ## Installation:
+
 ```
 pip install .
 ```
@@ -30,6 +31,7 @@ class MyModel(nnio.Model):
 ```
 
 Then use this model as:
+
 ```python
 # Create model
 model = MyModel()
