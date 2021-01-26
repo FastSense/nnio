@@ -10,3 +10,6 @@ from .onnx import ONNXModel
 
 # Preprocessing class
 from .preprocessing import Preprocessing
+
+# Output classes
+from .output import DetectionBox
