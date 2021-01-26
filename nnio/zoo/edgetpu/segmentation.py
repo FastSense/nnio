@@ -5,9 +5,7 @@ from ...model import Model
 from ...edgetpu import EdgeTPUModel
 
 
-class _DeepLabV3(Model):
-    # TODO: test
-
+class DeepLabV3(Model):
     URL_CPU = 'https://github.com/google-coral/edgetpu/raw/master/test_data/deeplabv3_mnv2_pascal_quant.tflite'
     URL_TPU = 'https://github.com/google-coral/edgetpu/raw/master/test_data/deeplabv3_mnv2_pascal_quant_edgetpu.tflite'
     URL_LABELS = 'https://github.com/google-coral/edgetpu/raw/master/test_data/pascal_voc_segmentation_labels.txt'
@@ -42,7 +40,17 @@ class _DeepLabV3(Model):
                 break
 
     def forward(self, image):
-        segmentation = self.model(image)
+        '''
+        input:
+        - image: numpy array
+            Image, prepared using preprocessing function returned by get_preprocessing()
+
+        output: numpy array
+            Segmentation map of the same size as the input image: shape=[batch, 513, 513]
+            For each pixel gives an integer denoting class.
+            Class labels are available through .labels attribute of this object.
+        '''
+        segmentation = self.model(image)[0]
         return segmentation
 
     def get_preprocessing(self):

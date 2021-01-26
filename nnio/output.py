@@ -71,7 +71,7 @@ class DetectionBox:
             image = cv2.putText(
                 image,
                 self.label,
-                start_point,
+                (start_point[0], start_point[1] + 20 + stroke_width),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 1, text_color, text_width, cv2.LINE_AA
             )

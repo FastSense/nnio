@@ -7,14 +7,9 @@ from ...model import Model
 from ...onnx import ONNXModel
 
 
-class _MobileNetV2(Model):
-    '''
-    WARNING: this is not working yet
-    '''
-    #TODO: make it work
-
-    URL_MODEL = 'https://github.com/onnx/models/blob/master/vision/classification/mobilenet/model/mobilenetv2-7.onnx'
-    URL_LABELS = 'https://github.com/onnx/models/blob/master/vision/classification/synset.txt'
+class MobileNetV2(Model):
+    URL_MODEL = 'https://github.com/onnx/models/raw/master/vision/classification/mobilenet/model/mobilenetv2-7.onnx'
+    URL_LABELS = 'https://github.com/onnx/models/raw/master/vision/classification/synset.txt'
 
     def __init__(self):
         '''
@@ -42,11 +37,11 @@ class _MobileNetV2(Model):
     def get_preprocessing(self):
         return Preprocessing(
             resize=(224, 224),
-            dtype='float',
+            dtype='float32',
             divide_by_255=True,
             means=[0.485, 0.456, 0.406],
             scales=1 / np.array([0.229, 0.224, 0.225]),
-            padding=True,
+            padding=False,
             batch_dimension=True,
             channels_first=True,
         )

@@ -5,6 +5,7 @@ from ...model import Model
 from ...edgetpu import EdgeTPUModel
 from ...output import DetectionBox
 
+
 class SSDMobileNet(Model):
     URL_CPU = 'https://github.com/google-coral/edgetpu/raw/master/test_data/ssd_mobilenet_{}_coco_quant_postprocess.tflite'
     URL_TPU = 'https://github.com/google-coral/edgetpu/raw/master/test_data/ssd_mobilenet_{}_coco_quant_postprocess_edgetpu.tflite'
@@ -86,7 +87,7 @@ class SSDMobileNetFace(Model):
             Same for other devices if they are present.
             Leave None to use CPU
         - threshold: float
-            Detection threshold
+            Detection threshold. It affects sensitivity of the detector.
         '''
         super().__init__()
 

@@ -49,6 +49,6 @@ class MobileNet(Model):
         return Preprocessing(
             resize=(224, 224),
             dtype='uint8',
-            padding=True,
+            padding=False,
             batch_dimension=True,
         )
