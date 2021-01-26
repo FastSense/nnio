@@ -66,6 +66,7 @@ class Preprocessing(Model):
         if isinstance(image, str):
             image = self.read_image(image)
         orig_shape = image.shape
+        assert str(image.dtype) == 'uint8'
 
         # Convert colors
         if self.bgr:
@@ -75,13 +76,9 @@ class Preprocessing(Model):
         if self.resize is not None:
             image = self.resize_image(image, self.resize, self.padding)
 
-        # Change datatype
-        assert str(image.dtype) == 'uint8'
-        image = image.astype(self.dtype)
-
         # Divide by 255
         if self.divide_by_255:
-            image = image / self.divide_by_255
+            image = image / 255
 
         # Shift and scale
         if self.means is not None:
@@ -94,6 +91,9 @@ class Preprocessing(Model):
             image = image.transpose([2, 0, 1])
         if self.batch_dimension:
             image = image[None]
+
+        # Change datatype
+        image = image.astype(self.dtype)
 
         if return_shape:
             return image.copy(), orig_shape
