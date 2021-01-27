@@ -50,20 +50,17 @@ class SSDMobileNet(Model):
     def forward(self, image):
         boxes, classes, scores, _num_detections = self.model(image)
         # Parse output
-        out_batch = []
-        for batch_i in range(len(boxes)):
-            out_boxes = []
-            for i in range(len(boxes[batch_i])):
-                if scores[batch_i, i] < self.threshold:
-                    continue
-                x_1, y_1, x_2, y_2 = boxes[batch_i, i]
-                label = self.labels[int(classes[batch_i, i])]
-                score = scores[batch_i, i]
-                out_boxes.append(
-                    DetectionBox(x_1, y_1, x_2, y_2, label, score)
-                )
-            out_batch.append(out_boxes)
-        return out_batch
+        out_boxes = []
+        for i in range(len(boxes[0])):
+            if scores[0, i] < self.threshold:
+                continue
+            x_1, y_1, x_2, y_2 = boxes[0, i]
+            label = self.labels[int(classes[0, i])]
+            score = scores[0, i]
+            out_boxes.append(
+                DetectionBox(x_1, y_1, x_2, y_2, label, score)
+            )
+        return out_boxes
 
     def get_preprocessing(self):
         return Preprocessing(
@@ -106,20 +103,17 @@ class SSDMobileNetFace(Model):
     def forward(self, image):
         boxes, _, scores, _num_detections = self.model(image)
         # Parse output
-        out_batch = []
-        for batch_i in range(len(boxes)):
-            out_boxes = []
-            for i in range(len(boxes[batch_i])):
-                if scores[batch_i, i] < self.threshold:
-                    continue
-                x_1, y_1, x_2, y_2 = boxes[batch_i, i]
-                label = 'face'
-                score = scores[batch_i, i]
-                out_boxes.append(
-                    DetectionBox(x_1, y_1, x_2, y_2, label, score)
-                )
-            out_batch.append(out_boxes)
-        return out_batch
+        out_boxes = []
+        for i in range(len(boxes[0])):
+            if scores[0, i] < self.threshold:
+                continue
+            x_1, y_1, x_2, y_2 = boxes[0, i]
+            label = 'face'
+            score = scores[0, i]
+            out_boxes.append(
+                DetectionBox(x_1, y_1, x_2, y_2, label, score)
+            )
+        return out_boxes
 
     def get_preprocessing(self):
         return Preprocessing(
