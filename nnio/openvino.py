@@ -70,6 +70,6 @@ class OpenVINOModel(Model):
             raise ImportError
         ie = IECore()
         net = ie.read_network(model_xml, model_bin)
-        net = ie.load_network(self.net, device)
+        net = ie.load_network(net, device)
         return net
 

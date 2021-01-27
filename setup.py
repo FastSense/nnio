@@ -2,7 +2,7 @@ from distutils.core import setup, Extension
 
 setup(
     name='nnio',
-    version='0.1.7',
+    version='0.2.0.beta',
     description='Simple neural network inference on devices',
     long_description='''
     See more details at the project's homepage: https://github.com/FastSense/nnio
