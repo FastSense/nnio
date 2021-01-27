@@ -5,21 +5,39 @@ from ...model import Model
 from ...openvino import OpenVINOModel
 from ...output import DetectionBox
 
-class SSDMobileNetV1(Model):
-    URL_MODEL_BIN = 'https://github.com/FastSense/nnio/raw/master/models/openvino/mobilenet-ssd/mobilenet-ssd-fp16.bin'
-    URL_MODEL_XML = 'https://github.com/FastSense/nnio/raw/master/models/openvino/mobilenet-ssd/mobilenet-ssd-fp16.xml'
+class SSDMobileNetV2(Model):
+    URL_MODEL_BIN = 'https://github.com/FastSense/nnio/raw/development/models/openvino/ssd_mobilenet_v2_coco/ssd_mobilenet_v2_coco_fp16.bin'
+    URL_MODEL_XML = 'https://github.com/FastSense/nnio/raw/development/models/openvino/ssd_mobilenet_v2_coco/ssd_mobilenet_v2_coco_fp16.xml'
     URL_LABELS = 'https://github.com/amikelive/coco-labels/raw/master/coco-labels-paper.txt'
 
     def __init__(
         self,
-        device='CPU'
+        device='CPU',
+        lite_version=True,
+        threshold=0.5
     ):
         '''
+        input:
+        - device: str
+            Choose Intel device:
+            "CPU", "GPU", "MYRIAD"
+        - threshold: float
+            Detection threshold. It affects sensitivity of the detector.
+        - lite_version: bool
+            If True, use SSDLite version
         '''
         super().__init__()
 
+        self.threshold = threshold
+
+        path_bin = self.URL_MODEL_BIN
+        path_xml = self.URL_MODEL_XML
+        if lite_version:
+            path_bin = path_bin.replace('ssd', 'ssdlite')
+            path_xml = path_xml.replace('ssd', 'ssdlite')
+
         # Load model
-        self.model = OpenVINOModel(self.URL_MODEL_BIN, self.URL_MODEL_XML, device)
+        self.model = OpenVINOModel(path_bin, path_xml, device)
 
         # Load labels from text file
         labels_path = utils.file_from_url(self.URL_LABELS, 'labels')
@@ -29,25 +47,26 @@ class SSDMobileNetV1(Model):
         ]
 
     def forward(self, image):
-        boxes, classes, scores, num_detections = self.model(image)
+        results = self.model(image)
         # Parse output
-        classes = classes - 1
-        out_batch = []
-        for batch_i in range(len(boxes)):
-            out_boxes = []
-            for i in range(int(num_detections[batch_i])):
-                x_1, y_1, x_2, y_2 = boxes[batch_i, i]
-                label = self.labels[int(classes[batch_i, i])]
-                score = scores[batch_i, i]
-                out_boxes.append(
-                    DetectionBox(x_1, y_1, x_2, y_2, label, score)
-                )
-            out_batch.append(out_boxes)
-        return out_batch
+        out_boxes = []
+        for res in results[0, 0]:
+            _, label, score, x_1, y_1, x_2, y_2 = res
+            if score < self.threshold:
+                continue
+            label = self.labels[int(label) - 1]
+            out_boxes.append(
+                DetectionBox(x_1, y_1, x_2, y_2, label, score)
+            )
+        return out_boxes
 
     def get_preprocessing(self):
         return Preprocessing(
-            resize=(224, 224),
-            dtype='uint8',
+            resize=(300, 300),
+            dtype='float32',
+            # means=127.5,
+            # scales=1/127.5,
+            channels_first=True,
             batch_dimension=True,
+            bgr=True,
         )
