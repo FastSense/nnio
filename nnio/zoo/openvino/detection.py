@@ -13,7 +13,7 @@ class SSDMobileNetV2(Model):
     def __init__(
         self,
         device='CPU',
-        lite_version=True,
+        lite=True,
         threshold=0.5
     ):
         '''
@@ -23,7 +23,7 @@ class SSDMobileNetV2(Model):
             "CPU", "GPU", "MYRIAD"
         - threshold: float
             Detection threshold. It affects sensitivity of the detector.
-        - lite_version: bool
+        - lite: bool
             If True, use SSDLite version
         '''
         super().__init__()
@@ -32,7 +32,7 @@ class SSDMobileNetV2(Model):
 
         path_bin = self.URL_MODEL_BIN
         path_xml = self.URL_MODEL_XML
-        if lite_version:
+        if lite:
             path_bin = path_bin.replace('ssd', 'ssdlite')
             path_xml = path_xml.replace('ssd', 'ssdlite')
 
@@ -51,7 +51,7 @@ class SSDMobileNetV2(Model):
         # Parse output
         out_boxes = []
         for res in results[0, 0]:
-            _, label, score, x_1, y_1, x_2, y_2 = res
+            _, label, score, y_1, x_1, y_2, x_2 = res
             if score < self.threshold:
                 continue
             label = self.labels[int(label) - 1]
@@ -64,8 +64,6 @@ class SSDMobileNetV2(Model):
         return Preprocessing(
             resize=(300, 300),
             dtype='float32',
-            # means=127.5,
-            # scales=1/127.5,
             channels_first=True,
             batch_dimension=True,
             bgr=True,
