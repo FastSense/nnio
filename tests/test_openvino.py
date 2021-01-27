@@ -3,7 +3,7 @@ import nnio
 
 
 def main():
-    # Load model
+    # Load models
     model = nnio.zoo.openvino.detection.SSDMobileNetV2()
 
     # Get preprocessing function
@@ -22,7 +22,7 @@ def main():
         image_rgb = box.draw(image_rgb)
 
     # Write result
-    cv2.imwrite('result.png', image_rgb[:,:,::-1])
+    cv2.imwrite('results/openvino_ssd.png', image_rgb[:,:,::-1])
 
 if __name__ == '__main__':
     main()
