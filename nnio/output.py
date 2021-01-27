@@ -61,6 +61,7 @@ class DetectionBox:
             int(image.shape[0] * self.x_2),
         )
         # Draw rectangle
+        # pylint: disable=no-member
         image = cv2.rectangle(
             image,
             start_point,
@@ -68,6 +69,7 @@ class DetectionBox:
             color, stroke_width)
         # Draw text
         if self.label is not None:
+            # pylint: disable=no-member
             image = cv2.putText(
                 image,
                 self.label,
