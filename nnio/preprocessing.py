@@ -108,13 +108,14 @@ class Preprocessing(Model):
         if is_url:
             path = utils.file_from_url(path, 'temp')
         # Read image
+        # pylint: disable=no-member
         image = cv2.imread(path)
         # Delete temporary file
         if is_url:
             os.remove(path)
         # Throw exception
         if image is None:
-            raise BaseException('Cannot read ' + image_path)
+            raise BaseException('Cannot read ' + path)
         # Convert from BGR to RGB
         image = image[:, :, ::-1]
         return image
@@ -130,6 +131,7 @@ class Preprocessing(Model):
             If True, image will be resized with the same aspect ratio
         '''
         if not padding:
+            # pylint: disable=no-member
             image = cv2.resize(image, resize)
         else:
             # Resize saving the aspect ratio
@@ -140,6 +142,7 @@ class Preprocessing(Model):
                 int(image.shape[1] / ratio),
                 int(image.shape[0] / ratio)
             )
+            # pylint: disable=no-member
             image = cv2.resize(image, new_size)
             # Pad with zeros
             padding = np.zeros([resize[1], resize[0], 3],
