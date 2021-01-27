@@ -25,18 +25,29 @@ class SSDMobileNetV1(Model):
         ]
 
     def forward(self, image):
+        '''
+        input:
+        - image: np array
+            Batch of input images
+        output:
+        - out_batch: list
+            List of lists of boxes. First index is image id inside batch. Second index is box's number
+        '''
         boxes, classes, scores, num_detections = self.model(image)
         # Parse output
         classes = classes - 1
-        out_boxes = []
-        for i in range(int(num_detections[0])):
-            x_1, y_1, x_2, y_2 = boxes[0, i]
-            label = self.labels[int(classes[0, i])]
-            score = scores[0, i]
-            out_boxes.append(
-                DetectionBox(x_1, y_1, x_2, y_2, label, score)
-            )
-        return out_boxes
+        out_batch = []
+        for batch_i in range(len(boxes)):
+            out_boxes = []
+            for i in range(int(num_detections[batch_i])):
+                x_1, y_1, x_2, y_2 = boxes[batch_i, i]
+                label = self.labels[int(classes[batch_i, i])]
+                score = scores[batch_i, i]
+                out_boxes.append(
+                    DetectionBox(x_1, y_1, x_2, y_2, label, score)
+                )
+            out_batch.append(out_boxes)
+        return out_batch
 
     def get_preprocessing(self):
         return Preprocessing(
