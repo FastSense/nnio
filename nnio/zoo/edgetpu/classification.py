@@ -38,12 +38,12 @@ class MobileNet(Model):
         ]
 
     def forward(self, image, return_scores=False):
-        scores = self.model(image)[0]
-        labels = [self.labels[scores[i].argmax()] for i in range(len(scores))]
+        scores = self.model(image)[0][0]
+        label = self.labels[scores.argmax()]
         if return_scores:
-            return labels, scores
+            return label, scores
         else:
-            return labels
+            return label
 
     def get_preprocessing(self):
         return Preprocessing(
