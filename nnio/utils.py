@@ -3,6 +3,8 @@ import os
 import pathlib
 import getpass
 
+from . import __version__
+
 PACKAGE_NAME = 'nnio'
 
 def is_url(s):
@@ -22,6 +24,7 @@ def file_from_url(url, category='other'):
         getpass.getuser(),
         '.cache',
         PACKAGE_NAME,
+        __version__,
         category,
     )
     # Create path if not exists
@@ -37,6 +40,7 @@ def file_from_url(url, category='other'):
     if not os.path.exists(file_path):
         print('Downloading file from: {}'.format(url))
         urllib.request.urlretrieve(url, file_path)
+        print('Downloaded to: {}'.format(file_path))
     else:
         print('Using cached file: {}'.format(file_path))
 

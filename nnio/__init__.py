@@ -1,3 +1,5 @@
+__version__ = '0.2.0'
+
 import nnio.zoo
 
 # Base model class
