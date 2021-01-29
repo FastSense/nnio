@@ -27,6 +27,7 @@ setup(
     packages=['nnio', 'nnio.zoo', 'nnio.zoo.edgetpu', 'nnio.zoo.openvino', 'nnio.zoo.onnx'],
     install_requires=[
         'numpy',
-        'opencv-python'
+        'opencv-python',
+        'onnxruntime'
     ]
 )
