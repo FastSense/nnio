@@ -29,9 +29,10 @@ class OpenVINOModel(Model):
             model_xml = utils.file_from_url(model_xml, 'models')
 
         # Create interpreter
-        self.net = self.make_interpreter(model_xml, model_bin, device)
+        self.device = device
+        self.ie, self.net = self.make_interpreter(model_xml, model_bin, device)
 
-    def forward(self, inputs, return_time=False):
+    def forward(self, inputs, return_info=False):
         '''
         input:
         - inputs: numpy array
@@ -48,11 +49,13 @@ class OpenVINOModel(Model):
         # Process output a little
         if len(out.keys()) == 1:
             out = out[list(out.keys())[0]]
-        times = {
-            'invoke': end - start,
-        }
-        if return_time:
-            return out, times
+        if return_info:
+            info = {
+                'invoke_time': end - start,
+            }
+            if self.device == 'MYRIAD':
+                info['temperature'] = self.ie.get_metric(metric_name="DEVICE_THERMAL", device_name="MYRIAD")
+            return out, info
         else:
             return out
 
@@ -71,5 +74,5 @@ class OpenVINOModel(Model):
         ie = IECore()
         net = ie.read_network(model_xml, model_bin)
         net = ie.load_network(net, device)
-        return net
+        return ie, net
 
