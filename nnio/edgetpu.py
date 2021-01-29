@@ -34,7 +34,7 @@ class EdgeTPUModel(Model):
         self.interpreter = self.make_interpreter(model_path, device)
         self.interpreter.allocate_tensors()
 
-    def forward(self, *inputs, return_time=False):
+    def forward(self, *inputs, return_info=False):
         '''
         input:
         - *inputs: list of arguments
@@ -55,14 +55,13 @@ class EdgeTPUModel(Model):
         after_invoke = time.time()
         # Get results from the model
         results = [self.output_tensor(i) for i in range(self.n_outputs)]
-        end = time.time()
-        times = {
-            'assign': before_invoke - start,
-            'invoke': after_invoke - before_invoke,
-            'getres': end - after_invoke,
-        }
-        if return_time:
-            return results, times
+        # Return results
+        if return_info:
+            info = {
+                'assign_time': before_invoke - start,
+                'invoke_time': after_invoke - before_invoke,
+            }
+            return results, info
         else:
             return results
 

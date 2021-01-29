@@ -49,6 +49,7 @@ class OpenVINOModel(Model):
         # Process output a little
         if len(out.keys()) == 1:
             out = out[list(out.keys())[0]]
+        # Return results
         if return_info:
             info = {
                 'invoke_time': end - start,

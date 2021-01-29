@@ -25,7 +25,8 @@ def main():
 
     # Pass to the neural network
     image_prepared = preproc('dogs.jpg')
-    boxes = model(image_prepared)
+    boxes, info = model(image_prepared, return_info=True)
+    print(info)
 
     # Draw boxes
     for box in boxes:
