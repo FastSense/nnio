@@ -28,6 +28,5 @@ setup(
     install_requires=[
         'numpy',
         'opencv-python',
-        'onnxruntime'
     ]
 )
