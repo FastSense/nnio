@@ -18,6 +18,7 @@ def main():
 
     # Get preprocessing function
     preproc = model.get_preprocessing()
+    print(preproc)
 
     # Read image
     # pylint: disable=no-member

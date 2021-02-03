@@ -47,8 +47,12 @@ class SSDMobileNet(Model):
             for line in open(labels_path)
         }
 
-    def forward(self, image):
-        boxes, classes, scores, _num_detections = self.model(image)
+    def forward(self, image, return_info=False):
+        out = self.model(image, return_info=return_info)
+        if return_info:
+            (boxes, classes, scores, _num_detections), info = out
+        else:
+            boxes, classes, scores, _num_detections = out
         # Parse output
         out_boxes = []
         for i in range(len(boxes[0])):
@@ -60,7 +64,10 @@ class SSDMobileNet(Model):
             out_boxes.append(
                 DetectionBox(x_1, y_1, x_2, y_2, label, score)
             )
-        return out_boxes
+        if return_info:
+            return out_boxes, info
+        else:
+            return out_boxes
 
     def get_preprocessing(self):
         return Preprocessing(
@@ -100,8 +107,12 @@ class SSDMobileNetFace(Model):
             model_path = self.URL_TPU
         self.model = EdgeTPUModel(model_path, device)
 
-    def forward(self, image):
-        boxes, _, scores, _num_detections = self.model(image)
+    def forward(self, image, return_info=False):
+        out = self.model(image, return_info=return_info)
+        if return_info:
+            (boxes, _, scores, _num_detections), info = out
+        else:
+            boxes, _, scores, _num_detections = out
         # Parse output
         out_boxes = []
         for i in range(len(boxes[0])):
@@ -113,7 +124,10 @@ class SSDMobileNetFace(Model):
             out_boxes.append(
                 DetectionBox(x_1, y_1, x_2, y_2, label, score)
             )
-        return out_boxes
+        if return_info:
+            return out_boxes, info
+        else:
+            return out_boxes
 
     def get_preprocessing(self):
         return Preprocessing(
