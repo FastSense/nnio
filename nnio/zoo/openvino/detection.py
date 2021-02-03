@@ -47,7 +47,7 @@ class SSDMobileNetV2(Model):
         ]
 
     def forward(self, image, return_info=False):
-        results = self.model(image, return_info)
+        results = self.model(image, return_info=return_info)
         if return_info:
             results, info = results
         # Parse output
