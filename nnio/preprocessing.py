@@ -158,7 +158,7 @@ class Preprocessing(Model):
 
     def __str__(self):
         ''' Outputs preprocessing parameters as a string '''
-        s = 'nnio.Preprocessing(resize={}, dtype={}, divide_by_255={}, means={}, scales={}, padding={}, channels_first={}, batch_dimension={}, bgr={})'
+        s = 'Preprocessing(resize={}, dtype={}, divide_by_255={}, means={}, scales={}, padding={}, channels_first={}, batch_dimension={}, bgr={})'
         s = s.format(
             self.resize,
             self.dtype,

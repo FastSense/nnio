@@ -8,9 +8,9 @@ def main():
         description='Measure inference time on dummy image input'
     )
     parser.add_argument(
-        '--device', type=str, default=None,
+        '--device', type=str, default='CPU',
         required=False,
-        help='Device. Set :0 to use EdgeTPU. If not specified, will use CPU.')
+        help='Device. CPU or TPU. Set TPU:0 or TPU:1 to use specific device.')
     args = parser.parse_args()
 
     # Load models
@@ -18,7 +18,6 @@ def main():
 
     # Get preprocessing function
     preproc = model.get_preprocessing()
-    print(preproc)
 
     # Read image
     # pylint: disable=no-member

@@ -10,7 +10,7 @@ def main():
     parser.add_argument(
         '--device', type=str, default='CPU',
         required=False,
-        help='Device. CPU or GPU or MYRIAD.')
+        help='Device. CPU, GPU or MYRIAD. Set MYRIAD:0 or MYRIAD:1 to use specific device.')
     args = parser.parse_args()
 
     # Load models
