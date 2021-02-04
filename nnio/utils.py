@@ -7,6 +7,9 @@ from . import __version__
 
 PACKAGE_NAME = 'nnio'
 
+# Temperature logging flag
+LOG_TEMPERATURE = False
+
 def is_url(s):
     '''
     Check if input string is url or not
@@ -45,3 +48,9 @@ def file_from_url(url, category='other'):
         print('Using cached file: {}'.format(file_path))
 
     return file_path
+
+
+# Flag setter
+def log_temperature_(decision=True):
+    global LOG_TEMPERATURE
+    LOG_TEMPERATURE = decision
