@@ -2,6 +2,7 @@ import argparse
 import cv2
 import nnio
 
+nnio.utils.enable_logging_temperature(True)
 
 def main():
     parser = argparse.ArgumentParser(
