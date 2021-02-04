@@ -93,6 +93,6 @@ class OpenVINOModel(Model):
             device = myriads[idx]
         # Load model on device
         net = ie.read_network(model_xml, model_bin)
-        print('Loading model to: ', device)
+        print('Loading model to:', device)
         net = ie.load_network(net, device)
         return ie, net, device

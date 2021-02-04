@@ -30,7 +30,7 @@ class EdgeTPUModel(Model):
         if utils.is_url(model_path):
             model_path = utils.file_from_url(model_path, 'models')
         # Create interpreter
-        assert device == 'CPU' or device.split(':')[0] == 'TPU'
+        assert device == 'CPU' or device.split(':')[0] == 'TPU' or device[0] == ':'
         self.interpreter = self.make_interpreter(model_path, device)
         self.interpreter.allocate_tensors()
 
