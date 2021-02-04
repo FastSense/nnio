@@ -14,23 +14,23 @@ class EdgeTPUModel(Model):
     def __init__(
         self,
         model_path,
-        device=None
+        device='CPU'
     ):
         '''
         input:
         - model_path: str
             url or path to the tflite model
-        - device: str or None
-            Set ":0" to use the first EdgeTPU device.
-            Set ":1" to use the second EdgeTPU device.
-            Same for other devices if they are present.
-            Leave None to use CPU
+        - device: str
+            "CPU" by default.
+            Set "TPU" or "TPU:0" to use the first EdgeTPU device.
+            Set "TPU:1" to use the second EdgeTPU device etc.
         '''
         super().__init__()
         # Download file from internet
         if utils.is_url(model_path):
             model_path = utils.file_from_url(model_path, 'models')
         # Create interpreter
+        assert device == 'CPU' or device.split(':')[0] == 'TPU'
         self.interpreter = self.make_interpreter(model_path, device)
         self.interpreter.allocate_tensors()
 
@@ -86,7 +86,7 @@ class EdgeTPUModel(Model):
         ]
 
     @staticmethod
-    def make_interpreter(model_file, device=None):
+    def make_interpreter(model_file, device='CPU'):
         ' Load model and create tflite interpreter '
         try:
             import tflite_runtime.interpreter as tflite
@@ -102,18 +102,21 @@ class EdgeTPUModel(Model):
             
             https://www.tensorflow.org/lite/guide/python
             ''')
-            if device is None:
+            if device == 'CPU':
                 print('Trying to use tensorflow version on CPU')
                 import tensorflow.lite as tflite
             else:
                 raise ImportError
-        if device is not None:
+        if device != 'CPU':
             return tflite.Interpreter(
                 model_path=model_file,
                 experimental_delegates=[
                     tflite.load_delegate(
                         EDGETPU_SHARED_LIB,
-                        {'device': device})
+                        {
+                            'device': device.replace('TPU', '')
+                        }
+                    )
                 ])
         else:
             return tflite.Interpreter(

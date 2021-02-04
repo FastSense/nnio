@@ -10,21 +10,20 @@ class DeepLabV3(Model):
     URL_TPU = 'https://github.com/google-coral/edgetpu/raw/master/test_data/deeplabv3_mnv2_pascal_quant_edgetpu.tflite'
     URL_LABELS = 'https://github.com/google-coral/edgetpu/raw/master/test_data/pascal_voc_segmentation_labels.txt'
 
-    def __init__(self, device=None, version='v2'):
+    def __init__(self, device='CPU', version='v2'):
         '''
         input:
-        - device: str or None
-            Set ":0" to use the first EdgeTPU device.
-            Set ":1" to use the second EdgeTPU device.
-            Same for other devices if they are present.
-            Leave None to use CPU
+        - device: str
+            "CPU" by default.
+            Set "TPU" or "TPU:0" to use the first EdgeTPU device.
+            Set "TPU:1" to use the second EdgeTPU device etc.
         - version: str
             Either "v1" or "v2"
         '''
         super().__init__()
 
         # Load model
-        if device is None:
+        if device == 'CPU':
             model_path = self.URL_CPU.format(version)
         else:
             model_path = self.URL_TPU.format(version)

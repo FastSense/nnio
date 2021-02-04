@@ -13,17 +13,16 @@ class SSDMobileNet(Model):
 
     def __init__(
         self,
-        device=None,
+        device='CPU',
         version='v2',
         threshold=0.5
     ):
         '''
         input:
-        - device: str or None
-            Set ":0" to use the first EdgeTPU device.
-            Set ":1" to use the second EdgeTPU device.
-            Same for other devices if they are present.
-            Leave None to use CPU
+        - device: str
+            "CPU" by default.
+            Set "TPU" or "TPU:0" to use the first EdgeTPU device.
+            Set "TPU:1" to use the second EdgeTPU device etc.
         - version: str
             Either "v1" or "v2"
         - threshold: float
@@ -34,7 +33,7 @@ class SSDMobileNet(Model):
         self.threshold = threshold
 
         # Load model
-        if device is None:
+        if device == 'CPU':
             model_path = self.URL_CPU.format(version)
         else:
             model_path = self.URL_TPU.format(version)
@@ -83,16 +82,15 @@ class SSDMobileNetFace(Model):
 
     def __init__(
         self,
-        device=None,
+        device='CPU',
         threshold=0.5
     ):
         '''
         input:
-        - device: str or None
-            Set ":0" to use the first EdgeTPU device.
-            Set ":1" to use the second EdgeTPU device.
-            Same for other devices if they are present.
-            Leave None to use CPU
+        - device: str
+            "CPU" by default.
+            Set "TPU" or "TPU:0" to use the first EdgeTPU device.
+            Set "TPU:1" to use the second EdgeTPU device etc.
         - threshold: float
             Detection threshold. It affects sensitivity of the detector.
         '''
@@ -101,7 +99,7 @@ class SSDMobileNetFace(Model):
         self.threshold = threshold
 
         # Load model
-        if device is None:
+        if device == 'CPU':
             model_path = self.URL_CPU
         else:
             model_path = self.URL_TPU
