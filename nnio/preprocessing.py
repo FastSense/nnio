@@ -156,21 +156,18 @@ class Preprocessing(Model):
             image = padding.copy()
         return image
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    def __str__(self):
+        ''' Outputs preprocessing parameters as a string '''
+        s = 'Preprocessing(resize={}, dtype={}, divide_by_255={}, means={}, scales={}, padding={}, channels_first={}, batch_dimension={}, bgr={})'
+        s = s.format(
+            self.resize,
+            self.dtype,
+            self.divide_by_255,
+            self.means,
+            self.scales,
+            self.padding,
+            self.channels_first,
+            self.batch_dimension,
+            self.bgr,
+        )
+        return s

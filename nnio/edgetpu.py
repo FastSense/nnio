@@ -14,27 +14,27 @@ class EdgeTPUModel(Model):
     def __init__(
         self,
         model_path,
-        device=None
+        device='CPU'
     ):
         '''
         input:
         - model_path: str
             url or path to the tflite model
-        - device: str or None
-            Set ":0" to use the first EdgeTPU device.
-            Set ":1" to use the second EdgeTPU device.
-            Same for other devices if they are present.
-            Leave None to use CPU
+        - device: str
+            "CPU" by default.
+            Set "TPU" or "TPU:0" to use the first EdgeTPU device.
+            Set "TPU:1" to use the second EdgeTPU device etc.
         '''
         super().__init__()
         # Download file from internet
         if utils.is_url(model_path):
             model_path = utils.file_from_url(model_path, 'models')
         # Create interpreter
+        assert device == 'CPU' or device.split(':')[0] == 'TPU' or device[0] == ':'
         self.interpreter = self.make_interpreter(model_path, device)
         self.interpreter.allocate_tensors()
 
-    def forward(self, *inputs, return_time=False):
+    def forward(self, *inputs, return_info=False):
         '''
         input:
         - *inputs: list of arguments
@@ -55,14 +55,13 @@ class EdgeTPUModel(Model):
         after_invoke = time.time()
         # Get results from the model
         results = [self.output_tensor(i) for i in range(self.n_outputs)]
-        end = time.time()
-        times = {
-            'assign': before_invoke - start,
-            'invoke': after_invoke - before_invoke,
-            'getres': end - after_invoke,
-        }
-        if return_time:
-            return results, times
+        # Return results
+        if return_info:
+            info = {
+                'assign_time': before_invoke - start,
+                'invoke_time': after_invoke - before_invoke,
+            }
+            return results, info
         else:
             return results
 
@@ -87,7 +86,7 @@ class EdgeTPUModel(Model):
         ]
 
     @staticmethod
-    def make_interpreter(model_file, device=None):
+    def make_interpreter(model_file, device='CPU'):
         ' Load model and create tflite interpreter '
         try:
             import tflite_runtime.interpreter as tflite
@@ -103,18 +102,23 @@ class EdgeTPUModel(Model):
             
             https://www.tensorflow.org/lite/guide/python
             ''')
-            if device is None:
+            if device == 'CPU':
                 print('Trying to use tensorflow version on CPU')
                 import tensorflow.lite as tflite
             else:
                 raise ImportError
-        if device is not None:
+        if device != 'CPU':
+            if device == 'TPU':
+                device = 'TPU:0'
             return tflite.Interpreter(
                 model_path=model_file,
                 experimental_delegates=[
                     tflite.load_delegate(
                         EDGETPU_SHARED_LIB,
-                        {'device': device})
+                        {
+                            'device': device.replace('TPU', '')
+                        }
+                    )
                 ])
         else:
             return tflite.Interpreter(

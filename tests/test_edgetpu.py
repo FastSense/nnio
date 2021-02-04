@@ -2,7 +2,6 @@ import argparse
 import cv2
 import nnio
 
-nnio.utils.enable_logging_temperature(True)
 
 def main():
     parser = argparse.ArgumentParser(
@@ -11,11 +10,11 @@ def main():
     parser.add_argument(
         '--device', type=str, default='CPU',
         required=False,
-        help='Device. CPU, GPU or MYRIAD. Set MYRIAD:0 or MYRIAD:1 to use specific device.')
+        help='Device. CPU or TPU. Set TPU:0 or TPU:1 to use specific device.')
     args = parser.parse_args()
 
     # Load models
-    model = nnio.zoo.openvino.detection.SSDMobileNetV2(device=args.device)
+    model = nnio.zoo.edgetpu.detection.SSDMobileNet(device=args.device)
 
     # Get preprocessing function
     preproc = model.get_preprocessing()
@@ -36,7 +35,7 @@ def main():
 
     # Write result
     # pylint: disable=no-member
-    cv2.imwrite('results/openvino_ssd.png', image_rgb[:,:,::-1])
+    cv2.imwrite('results/edgetpu_ssd.png', image_rgb[:,:,::-1])
 
 if __name__ == '__main__':
     main()

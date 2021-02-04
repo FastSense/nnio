@@ -19,6 +19,8 @@ class OpenVINOModel(Model):
         - device: str
             Choose Intel device:
             "CPU", "GPU", "MYRIAD"
+            If there are multiple devices in your system, use indeces:
+            "MYRIAD:0"
         '''
         super().__init__()
 
@@ -29,9 +31,9 @@ class OpenVINOModel(Model):
             model_xml = utils.file_from_url(model_xml, 'models')
 
         # Create interpreter
-        self.net = self.make_interpreter(model_xml, model_bin, device)
+        self.ie, self.net, self.device = self.make_interpreter(model_xml, model_bin, device)
 
-    def forward(self, inputs, return_time=False):
+    def forward(self, inputs, return_info=False):
         '''
         input:
         - inputs: numpy array
@@ -48,11 +50,19 @@ class OpenVINOModel(Model):
         # Process output a little
         if len(out.keys()) == 1:
             out = out[list(out.keys())[0]]
-        times = {
-            'invoke': end - start,
-        }
-        if return_time:
-            return out, times
+        # Measure temperature
+        if self.device.startswith('MYRIAD'):
+            temperature = self.ie.get_metric(metric_name="DEVICE_THERMAL", device_name=self.device)
+            if utils.LOG_TEMPERATURE:
+                utils.log_temperature(self.device, temperature)
+        # Return results
+        if return_info:
+            info = {
+                'invoke_time': end - start,
+            }
+            if self.device.startswith('MYRIAD'):
+                info['temperature'] = temperature
+            return out, info
         else:
             return out
 
@@ -69,7 +79,20 @@ class OpenVINOModel(Model):
             ''')
             raise ImportError
         ie = IECore()
+        # Get list of MYRIAD devices
+        if 'MYRIAD' in device:
+            myriads = [
+                dev for dev in ie.available_devices
+                if dev.startswith('MYRIAD')
+            ]
+            if ':' in device:
+                device, idx = device.split(':')
+                idx = int(idx)
+            else:
+                idx = 0
+            device = myriads[idx]
+        # Load model on device
         net = ie.read_network(model_xml, model_bin)
+        print('Loading model to:', device)
         net = ie.load_network(net, device)
-        return net
-
+        return ie, net, device

@@ -20,7 +20,7 @@ class ONNXModel(Model):
         # Load model and create inference session
         self.sess = self.make_interpreter(model_path)
 
-    def forward(self, *inputs, return_time=False):
+    def forward(self, *inputs, return_info=False):
         '''
         input:
         - *inputs: list of arguments
@@ -43,11 +43,12 @@ class ONNXModel(Model):
         start = time.time()
         results = self.sess.run(outputs, inputs)
         end = time.time()
-        times = {
-            'invoke': end - start,
-        }
-        if return_time:
-            return results, times
+        # Return results
+        if return_info:
+            info = {
+                'invoke_time': end - start,
+            }
+            return results, info
         else:
             return results
 

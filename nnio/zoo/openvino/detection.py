@@ -46,8 +46,10 @@ class SSDMobileNetV2(Model):
             for line in open(labels_path)
         ]
 
-    def forward(self, image):
-        results = self.model(image)
+    def forward(self, image, return_info=False):
+        results = self.model(image, return_info=return_info)
+        if return_info:
+            results, info = results
         # Parse output
         out_boxes = []
         for res in results[0, 0]:
@@ -58,7 +60,10 @@ class SSDMobileNetV2(Model):
             out_boxes.append(
                 DetectionBox(x_1, y_1, x_2, y_2, label, score)
             )
-        return out_boxes
+        if return_info:
+            return out_boxes, info
+        else:
+            return out_boxes
 
     def get_preprocessing(self):
         return Preprocessing(

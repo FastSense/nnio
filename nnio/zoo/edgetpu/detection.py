@@ -13,17 +13,16 @@ class SSDMobileNet(Model):
 
     def __init__(
         self,
-        device=None,
+        device='CPU',
         version='v2',
         threshold=0.5
     ):
         '''
         input:
-        - device: str or None
-            Set ":0" to use the first EdgeTPU device.
-            Set ":1" to use the second EdgeTPU device.
-            Same for other devices if they are present.
-            Leave None to use CPU
+        - device: str
+            "CPU" by default.
+            Set "TPU" or "TPU:0" to use the first EdgeTPU device.
+            Set "TPU:1" to use the second EdgeTPU device etc.
         - version: str
             Either "v1" or "v2"
         - threshold: float
@@ -34,7 +33,7 @@ class SSDMobileNet(Model):
         self.threshold = threshold
 
         # Load model
-        if device is None:
+        if device == 'CPU':
             model_path = self.URL_CPU.format(version)
         else:
             model_path = self.URL_TPU.format(version)
@@ -47,8 +46,12 @@ class SSDMobileNet(Model):
             for line in open(labels_path)
         }
 
-    def forward(self, image):
-        boxes, classes, scores, _num_detections = self.model(image)
+    def forward(self, image, return_info=False):
+        out = self.model(image, return_info=return_info)
+        if return_info:
+            (boxes, classes, scores, _num_detections), info = out
+        else:
+            boxes, classes, scores, _num_detections = out
         # Parse output
         out_boxes = []
         for i in range(len(boxes[0])):
@@ -60,7 +63,10 @@ class SSDMobileNet(Model):
             out_boxes.append(
                 DetectionBox(x_1, y_1, x_2, y_2, label, score)
             )
-        return out_boxes
+        if return_info:
+            return out_boxes, info
+        else:
+            return out_boxes
 
     def get_preprocessing(self):
         return Preprocessing(
@@ -76,16 +82,15 @@ class SSDMobileNetFace(Model):
 
     def __init__(
         self,
-        device=None,
+        device='CPU',
         threshold=0.5
     ):
         '''
         input:
-        - device: str or None
-            Set ":0" to use the first EdgeTPU device.
-            Set ":1" to use the second EdgeTPU device.
-            Same for other devices if they are present.
-            Leave None to use CPU
+        - device: str
+            "CPU" by default.
+            Set "TPU" or "TPU:0" to use the first EdgeTPU device.
+            Set "TPU:1" to use the second EdgeTPU device etc.
         - threshold: float
             Detection threshold. It affects sensitivity of the detector.
         '''
@@ -94,14 +99,18 @@ class SSDMobileNetFace(Model):
         self.threshold = threshold
 
         # Load model
-        if device is None:
+        if device == 'CPU':
             model_path = self.URL_CPU
         else:
             model_path = self.URL_TPU
         self.model = EdgeTPUModel(model_path, device)
 
-    def forward(self, image):
-        boxes, _, scores, _num_detections = self.model(image)
+    def forward(self, image, return_info=False):
+        out = self.model(image, return_info=return_info)
+        if return_info:
+            (boxes, _, scores, _num_detections), info = out
+        else:
+            boxes, _, scores, _num_detections = out
         # Parse output
         out_boxes = []
         for i in range(len(boxes[0])):
@@ -113,7 +122,10 @@ class SSDMobileNetFace(Model):
             out_boxes.append(
                 DetectionBox(x_1, y_1, x_2, y_2, label, score)
             )
-        return out_boxes
+        if return_info:
+            return out_boxes, info
+        else:
+            return out_boxes
 
     def get_preprocessing(self):
         return Preprocessing(
