@@ -108,6 +108,8 @@ class EdgeTPUModel(Model):
             else:
                 raise ImportError
         if device != 'CPU':
+            if device == 'TPU':
+                device = 'TPU:0'
             return tflite.Interpreter(
                 model_path=model_file,
                 experimental_delegates=[
