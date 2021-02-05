@@ -1,6 +1,7 @@
 import argparse
 import cv2
 import nnio
+import time
 
 nnio.utils.enable_logging_temperature(True)
 
@@ -12,6 +13,10 @@ def main():
         '--device', type=str, default='CPU',
         required=False,
         help='Device. CPU, GPU or MYRIAD. Set MYRIAD:0 or MYRIAD:1 to use specific device.')
+    parser.add_argument(
+        '--speed-test-iters', type=int, default=0,
+        required=False,
+        help='Number of iterations to test speed.')
     args = parser.parse_args()
 
     # Load models
@@ -37,6 +42,21 @@ def main():
     # Write result
     # pylint: disable=no-member
     cv2.imwrite('results/openvino_ssd.png', image_rgb[:,:,::-1])
+
+    # Measure inference time
+    if args.speed_test_iters > 0:
+        times = []
+        start = time.time()
+        for _ in range(args.speed_test_iters):
+            _, info = model(image_prepared, return_info=True)
+            times.append(info['invoke_time'])
+            print(info)
+        end = time.time()
+        time_avg = sum(times) / len(times)
+        time_all = (end - start) / len(times)
+        print('Average inference time: {:.02f} ms'.format(time_avg * 1000))
+        print('Average summary time: {:.02f} ms'.format(time_all * 1000))
+
 
 if __name__ == '__main__':
     main()
