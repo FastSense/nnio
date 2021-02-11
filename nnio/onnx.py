@@ -3,6 +3,7 @@ import time
 from . import model as _model
 from . import utils as _utils
 
+
 class ONNXModel(_model.Model):
     def __init__(
         self,

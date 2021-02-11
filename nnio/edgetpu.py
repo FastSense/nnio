@@ -10,6 +10,7 @@ EDGETPU_SHARED_LIB = {
   'Windows': 'edgetpu.dll'
 }[platform.system()]
 
+
 class EdgeTPUModel(_model.Model):
     def __init__(
         self,
