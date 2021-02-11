@@ -87,4 +87,3 @@ class DetectionBox:
             self.label,
             self.score)
         return s
-
