@@ -80,7 +80,7 @@ class DetectionBox:
         return image
 
     def __str__(self):
-        template = 'DetectionBox(x_1={}, y_1={}, x_2={}, y_2={}, label={}, score={})'
+        template = 'nnio.DetectionBox(x_1={}, y_1={}, x_2={}, y_2={}, label={}, score={})'
         s = template.format(
             self.x_1, self.y_1,
             self.x_2, self.y_2,
