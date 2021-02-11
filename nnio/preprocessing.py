@@ -160,7 +160,7 @@ class Preprocessing(_model.Model):
 
     def __str__(self):
         ''' Outputs preprocessing parameters as a string '''
-        s = 'Preprocessing(resize={}, dtype={}, divide_by_255={}, means={}, scales={}, padding={}, channels_first={}, batch_dimension={}, bgr={})'
+        s = 'nnio.Preprocessing(resize={}, dtype={}, divide_by_255={}, means={}, scales={}, padding={}, channels_first={}, batch_dimension={}, bgr={})'
         s = s.format(
             self.resize,
             self.dtype,
@@ -173,3 +173,6 @@ class Preprocessing(_model.Model):
             self.bgr,
         )
         return s
+
+    def __eq__(self, other):
+        return str(self) == str(other)
