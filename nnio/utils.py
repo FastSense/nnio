@@ -29,7 +29,7 @@ def file_from_url(url, category='other'):
         getpass.getuser(),
         '.cache',
         PACKAGE_NAME,
-        __version__,
+        '.'.join(__version__.split('.')[:2]),
         category,
     )
     # Create path if not exists
