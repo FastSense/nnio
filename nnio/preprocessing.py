@@ -2,10 +2,10 @@ import cv2
 import numpy as np
 import os
 
-from .model import Model
-from . import utils
+from . import model as _model
+from . import utils as _utils
 
-class Preprocessing(Model):
+class Preprocessing(_model.Model):
     def __init__(
         self,
         resize=None,
@@ -104,9 +104,9 @@ class Preprocessing(Model):
     def read_image(path):
         ''' Read image from file or url '''
         # Download image if path is url
-        is_url = utils.is_url(path)
+        is_url = _utils.is_url(path)
         if is_url:
-            path = utils.file_from_url(path, 'temp')
+            path = _utils.file_from_url(path, 'temp')
         # Read image
         # pylint: disable=no-member
         image = cv2.imread(path)
