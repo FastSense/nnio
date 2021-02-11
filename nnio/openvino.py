@@ -93,7 +93,7 @@ class OpenVINOModel(_model.Model):
             try:
                 device = myriads[idx]
             except:
-                BaseException('Cannot find out which device is {}\nAvailable devices: {}'.format(device, ie.available_devices))
+                raise BaseException('Cannot find out which device is {}\nAvailable devices: {}'.format(device, ie.available_devices))
         # Load model on device
         net = ie.read_network(model_xml, model_bin)
         print('Loading model to:', device)

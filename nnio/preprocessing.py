@@ -52,21 +52,23 @@ class Preprocessing(_model.Model):
         self.batch_dimension = batch_dimension
         self.bgr = bgr
 
-    def forward(self, image, return_shape=False):
+    def forward(self, image, return_original=False):
         '''
         Preprocess the image.
         input:
         - image: np.ndarray of type uint8 or str
             RGB image
             If str, it will be concerned as image path.
-        - return_shape: bool
-            If True, will return shape of the original image
+        - return_original: bool
+            If True, will return tuple of (preprocessed_image, original_image)
         '''
         # Read image
         if isinstance(image, str):
             image = self.read_image(image)
-        orig_shape = image.shape
-        assert str(image.dtype) == 'uint8'
+        if return_original:
+            orig_image = image.copy()
+        if str(image.dtype) != 'uint8':
+            raise BaseException('Input image data type for preprocessor must be uint8')
 
         # Convert colors
         if self.bgr:
@@ -95,8 +97,8 @@ class Preprocessing(_model.Model):
         # Change datatype
         image = image.astype(self.dtype)
 
-        if return_shape:
-            return image.copy(), orig_shape
+        if return_original:
+            return image.copy(), orig_image
         else:
             return image.copy()
 
