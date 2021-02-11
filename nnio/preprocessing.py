@@ -2,10 +2,10 @@ import cv2
 import numpy as np
 import os
 
-from .model import Model
-from . import utils
+from . import model as _model
+from . import utils as _utils
 
-class Preprocessing(Model):
+class Preprocessing(_model.Model):
     def __init__(
         self,
         resize=None,
@@ -52,21 +52,23 @@ class Preprocessing(Model):
         self.batch_dimension = batch_dimension
         self.bgr = bgr
 
-    def forward(self, image, return_shape=False):
+    def forward(self, image, return_original=False):
         '''
         Preprocess the image.
         input:
         - image: np.ndarray of type uint8 or str
             RGB image
             If str, it will be concerned as image path.
-        - return_shape: bool
-            If True, will return shape of the original image
+        - return_original: bool
+            If True, will return tuple of (preprocessed_image, original_image)
         '''
         # Read image
         if isinstance(image, str):
             image = self.read_image(image)
-        orig_shape = image.shape
-        assert str(image.dtype) == 'uint8'
+        if return_original:
+            orig_image = image.copy()
+        if str(image.dtype) != 'uint8':
+            raise BaseException('Input image data type for preprocessor must be uint8')
 
         # Convert colors
         if self.bgr:
@@ -95,8 +97,8 @@ class Preprocessing(Model):
         # Change datatype
         image = image.astype(self.dtype)
 
-        if return_shape:
-            return image.copy(), orig_shape
+        if return_original:
+            return image.copy(), orig_image
         else:
             return image.copy()
 
@@ -104,9 +106,9 @@ class Preprocessing(Model):
     def read_image(path):
         ''' Read image from file or url '''
         # Download image if path is url
-        is_url = utils.is_url(path)
+        is_url = _utils.is_url(path)
         if is_url:
-            path = utils.file_from_url(path, 'temp')
+            path = _utils.file_from_url(path, 'temp')
         # Read image
         # pylint: disable=no-member
         image = cv2.imread(path)
@@ -158,7 +160,7 @@ class Preprocessing(Model):
 
     def __str__(self):
         ''' Outputs preprocessing parameters as a string '''
-        s = 'Preprocessing(resize={}, dtype={}, divide_by_255={}, means={}, scales={}, padding={}, channels_first={}, batch_dimension={}, bgr={})'
+        s = 'nnio.Preprocessing(resize={}, dtype={}, divide_by_255={}, means={}, scales={}, padding={}, channels_first={}, batch_dimension={}, bgr={})'
         s = s.format(
             self.resize,
             self.dtype,
@@ -171,3 +173,6 @@ class Preprocessing(Model):
             self.bgr,
         )
         return s
+
+    def __eq__(self, other):
+        return str(self) == str(other)

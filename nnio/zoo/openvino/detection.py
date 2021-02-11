@@ -1,11 +1,12 @@
-from ... import utils
-from ...preprocessing import Preprocessing
+from ... import utils as _utils
+from ... import preprocessing as _preprocessing
 
-from ...model import Model
-from ...openvino import OpenVINOModel
-from ...output import DetectionBox
+from ... import model as _model
+from ... import openvino as _openvino
+from ... import output as _output
 
-class SSDMobileNetV2(Model):
+
+class SSDMobileNetV2(_model.Model):
     URL_MODEL_BIN = 'https://github.com/FastSense/nnio/raw/development/models/openvino/ssd_mobilenet_v2_coco/ssd_mobilenet_v2_coco_fp16.bin'
     URL_MODEL_XML = 'https://github.com/FastSense/nnio/raw/development/models/openvino/ssd_mobilenet_v2_coco/ssd_mobilenet_v2_coco_fp16.xml'
     URL_LABELS = 'https://github.com/amikelive/coco-labels/raw/master/coco-labels-paper.txt'
@@ -37,10 +38,10 @@ class SSDMobileNetV2(Model):
             path_xml = path_xml.replace('ssd', 'ssdlite')
 
         # Load model
-        self.model = OpenVINOModel(path_bin, path_xml, device)
+        self.model = _openvino.OpenVINOModel(path_bin, path_xml, device)
 
         # Load labels from text file
-        labels_path = utils.file_from_url(self.URL_LABELS, 'labels')
+        labels_path = _utils.file_from_url(self.URL_LABELS, 'labels')
         self.labels = [
             line.strip()
             for line in open(labels_path)
@@ -58,7 +59,7 @@ class SSDMobileNetV2(Model):
                 continue
             label = self.labels[int(label) - 1]
             out_boxes.append(
-                DetectionBox(x_1, y_1, x_2, y_2, label, score)
+                _output.DetectionBox(x_1, y_1, x_2, y_2, label, score)
             )
         if return_info:
             return out_boxes, info
@@ -66,7 +67,7 @@ class SSDMobileNetV2(Model):
             return out_boxes
 
     def get_preprocessing(self):
-        return Preprocessing(
+        return _preprocessing.Preprocessing(
             resize=(300, 300),
             dtype='float32',
             channels_first=True,

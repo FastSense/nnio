@@ -1,9 +1,10 @@
 import time
 
-from .model import Model
-from . import utils
+from . import model as _model
+from . import utils as _utils
 
-class OpenVINOModel(Model):
+
+class OpenVINOModel(_model.Model):
     def __init__(
         self,
         model_bin,
@@ -25,10 +26,10 @@ class OpenVINOModel(Model):
         super().__init__()
 
         # Download files from internet
-        if utils.is_url(model_bin):
-            model_bin = utils.file_from_url(model_bin, 'models')
-        if utils.is_url(model_xml):
-            model_xml = utils.file_from_url(model_xml, 'models')
+        if _utils.is_url(model_bin):
+            model_bin = _utils.file_from_url(model_bin, 'models')
+        if _utils.is_url(model_xml):
+            model_xml = _utils.file_from_url(model_xml, 'models')
 
         # Create interpreter
         self.ie, self.net, self.device = self.make_interpreter(model_xml, model_bin, device)
@@ -53,8 +54,8 @@ class OpenVINOModel(Model):
         # Measure temperature
         if self.device.startswith('MYRIAD'):
             temperature = self.ie.get_metric(metric_name="DEVICE_THERMAL", device_name=self.device)
-            if utils.LOG_TEMPERATURE:
-                utils.log_temperature(self.device, temperature)
+            if _utils.LOG_TEMPERATURE:
+                _utils.log_temperature(self.device, temperature)
         # Return results
         if return_info:
             info = {
@@ -83,14 +84,17 @@ class OpenVINOModel(Model):
         if 'MYRIAD' in device:
             myriads = [
                 dev for dev in ie.available_devices
-                if dev.startswith('MYRIAD')
+                if 'MYRIAD' in dev
             ]
             if ':' in device:
-                device, idx = device.split(':')
+                _, idx = device.split(':')
                 idx = int(idx)
             else:
                 idx = 0
-            device = myriads[idx]
+            try:
+                device = myriads[idx]
+            except:
+                raise BaseException('Cannot find out which device is {}\nAvailable devices: {}'.format(device, ie.available_devices))
         # Load model on device
         net = ie.read_network(model_xml, model_bin)
         print('Loading model to:', device)

@@ -1,8 +1,8 @@
 import platform
 import time
 
-from .model import Model
-from . import utils
+from . import model as _model
+from . import utils as _utils
 
 EDGETPU_SHARED_LIB = {
   'Linux': 'libedgetpu.so.1',
@@ -10,7 +10,8 @@ EDGETPU_SHARED_LIB = {
   'Windows': 'edgetpu.dll'
 }[platform.system()]
 
-class EdgeTPUModel(Model):
+
+class EdgeTPUModel(_model.Model):
     def __init__(
         self,
         model_path,
@@ -27,8 +28,8 @@ class EdgeTPUModel(Model):
         '''
         super().__init__()
         # Download file from internet
-        if utils.is_url(model_path):
-            model_path = utils.file_from_url(model_path, 'models')
+        if _utils.is_url(model_path):
+            model_path = _utils.file_from_url(model_path, 'models')
         # Create interpreter
         assert device == 'CPU' or device.split(':')[0] == 'TPU' or device[0] == ':'
         self.interpreter = self.make_interpreter(model_path, device)

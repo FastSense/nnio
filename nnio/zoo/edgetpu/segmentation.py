@@ -1,11 +1,11 @@
-from ... import utils
-from ...preprocessing import Preprocessing
+from ... import utils as _utils
+from ... import preprocessing as _preprocessing
 
-from ...model import Model
-from ...edgetpu import EdgeTPUModel
+from ... import model as _model
+from ... import edgetpu as _edgetpu
 
 
-class DeepLabV3(Model):
+class DeepLabV3(_model.Model):
     URL_CPU = 'https://github.com/google-coral/edgetpu/raw/master/test_data/deeplabv3_mnv2_pascal_quant.tflite'
     URL_TPU = 'https://github.com/google-coral/edgetpu/raw/master/test_data/deeplabv3_mnv2_pascal_quant_edgetpu.tflite'
     URL_LABELS = 'https://github.com/google-coral/edgetpu/raw/master/test_data/pascal_voc_segmentation_labels.txt'
@@ -27,10 +27,10 @@ class DeepLabV3(Model):
             model_path = self.URL_CPU.format(version)
         else:
             model_path = self.URL_TPU.format(version)
-        self.model = EdgeTPUModel(model_path, device)
+        self.model = _edgetpu.EdgeTPUModel(model_path, device)
 
         # Load labels from text file
-        labels_path = utils.file_from_url(self.URL_LABELS, 'labels')
+        labels_path = _utils.file_from_url(self.URL_LABELS, 'labels')
         self.labels = []
         for line in open(labels_path):
             if line.strip() != '':
@@ -53,7 +53,7 @@ class DeepLabV3(Model):
         return segmentation
 
     def get_preprocessing(self):
-        return Preprocessing(
+        return _preprocessing.Preprocessing(
             resize=(513, 513),
             dtype='uint8',
             padding=False,

@@ -1,13 +1,13 @@
 import numpy as np
 
-from ... import utils
-from ...preprocessing import Preprocessing
+from ... import utils as _utils
+from ... import preprocessing as _preprocessing
 
-from ...model import Model
-from ...onnx import ONNXModel
+from ... import model as _model
+from ... import onnx as _onnx
 
 
-class MobileNetV2(Model):
+class MobileNetV2(_model.Model):
     URL_MODEL = 'https://github.com/onnx/models/raw/master/vision/classification/mobilenet/model/mobilenetv2-7.onnx'
     URL_LABELS = 'https://github.com/onnx/models/raw/master/vision/classification/synset.txt'
 
@@ -17,10 +17,10 @@ class MobileNetV2(Model):
         super().__init__()
 
         # Load model
-        self.model = ONNXModel(self.URL_MODEL)
+        self.model = _onnx.ONNXModel(self.URL_MODEL)
 
         # Load labels from text file
-        labels_path = utils.file_from_url(self.URL_LABELS, 'labels')
+        labels_path = _utils.file_from_url(self.URL_LABELS, 'labels')
         self.labels = [
             ' '.join(line.strip().split()[1:])
             for line in open(labels_path)
@@ -35,7 +35,7 @@ class MobileNetV2(Model):
             return label
 
     def get_preprocessing(self):
-        return Preprocessing(
+        return _preprocessing.Preprocessing(
             resize=(224, 224),
             dtype='float32',
             divide_by_255=True,

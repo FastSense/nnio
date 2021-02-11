@@ -1,9 +1,10 @@
 import time
 
-from .model import Model
-from . import utils
+from . import model as _model
+from . import utils as _utils
 
-class ONNXModel(Model):
+
+class ONNXModel(_model.Model):
     def __init__(
         self,
         model_path,
@@ -15,8 +16,8 @@ class ONNXModel(Model):
         '''
         super().__init__()
         # Download file from internet
-        if utils.is_url(model_path):
-            model_path = utils.file_from_url(model_path, 'models')
+        if _utils.is_url(model_path):
+            model_path = _utils.file_from_url(model_path, 'models')
         # Load model and create inference session
         self.sess = self.make_interpreter(model_path)
 
@@ -78,4 +79,3 @@ class ONNXModel(Model):
         import onnxruntime as rt
         sess = rt.InferenceSession(model_path)
         return sess
-
