@@ -3,6 +3,7 @@ import os
 import pathlib
 import getpass
 import datetime
+import numpy as np
 
 from . import __version__
 
@@ -88,3 +89,76 @@ def log_temperature(device, temperature):
     with open(file_path, 'a') as f:
         f.write('{},{}\n'.format(val_time, val_vpu_temp))
         f.flush()
+
+
+class HumanDataBase:
+    def __init__(
+        self,
+        new_entity_threshold=0.25,
+        merging_threshold=0.2
+    ):
+        self.vectors = {}
+        self.counts = {}
+        self.new_entity_threshold = new_entity_threshold
+        self.merging_threshold = merging_threshold
+
+    def find_closest(self, vec):
+        keys = list(self.vectors.keys())
+        vec = self.normalize(vec)
+        distances = [
+            self.distance(vec, self.vectors[key])
+            for key in keys
+        ]
+        if len(distances) == 0:
+            id_min = None
+        else:
+            id_min = np.argmin(distances)
+        if id_min is None or distances[id_min] > self.new_entity_threshold:
+            new_key = str(len(self.vectors))
+            print('adding', new_key)
+            if id_min is not None:
+                print(distances[id_min])
+            self.vectors[new_key] = vec
+            self.counts[new_key] = 1
+            return new_key
+        else:
+            key = keys[id_min]
+            self.vectors[key] = self.vectors[key] * self.counts[key] + vec
+            self.vectors[key] = self.normalize(self.vectors[key])
+            self.counts[key] = self.counts[key] + 1
+
+        return keys[id_min]
+
+    def optimize(self):
+        keys = list(self.vectors.keys())
+        if len(keys) < 2:
+            return
+        # Find vectors which are too close
+        distances = []
+        for i in range(len(keys) - 1):
+            for j in range(i + 1, len(keys)):
+                dst = self.distance(
+                    self.vectors[keys[i]],
+                    self.vectors[keys[j]],
+                )
+                if dst < self.merging_threshold:
+                    distances.append([i, j, dst])
+        # Merge two clusters which are the closest
+        if len(distances) > 0:
+            idx = np.argmin(np.array(distances)[:, 2])
+            i, j, dst = distances[idx]
+            print('Merging {} with {}'.format(i, j))
+            self.vectors[keys[i]] = self.vectors[keys[i]] + self.vectors[keys[j]]
+            self.vectors[keys[i]] = self.normalize(self.vectors[keys[i]])
+            self.counts[keys[i]] = 1
+            del self.vectors[keys[j]]
+            del self.counts[keys[j]]
+
+
+    @staticmethod
+    def normalize(vec):
+        return vec / np.sqrt((vec**2).sum())
+    
+    @staticmethod
+    def distance(vec1, vec2):
+        return 1 - vec1 @ vec2

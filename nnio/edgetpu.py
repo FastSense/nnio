@@ -56,6 +56,9 @@ class EdgeTPUModel(_model.Model):
         after_invoke = time.time()
         # Get results from the model
         results = [self.output_tensor(i) for i in range(self.n_outputs)]
+        # Process output a little
+        if self.n_outputs == 1:
+            results = results[0]
         # Return results
         if return_info:
             info = {
