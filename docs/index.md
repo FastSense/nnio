@@ -1,13 +1,15 @@
 # nnio
 nnio is a light-weight python package for easily running neural networks.  
 
+See [Installation guide](./install.md).
+
 It supports running models on CPU as well as some of the edge devices:
 
 * [Google Coral Edge TPU](https://coral.ai/)
 * Intel integrated GPUs
 * [Intel Myriad VPU](https://www.intel.ru/content/www/ru/ru/products/processors/movidius-vpu/movidius-myriad-x.html)
 
-For each device there is a specific API and model saving format. We wrap all those in a single class-based API.
+For each device there is a specific package and model saving format. We wrap all those in a single well-defined python package.
 
 There are 3 ways one can use nnio:
 
@@ -15,7 +17,7 @@ There are 3 ways one can use nnio:
 2. Using already prepared models from our model zoo: `nnio.zoo`
 3. Using our API to wrap around your own custom models.
 
-### Option 1: Loading your saved models for inference
+### Option 1: Using your saved models
 
 nnio provides three classes for loading models in different formats:
 
@@ -48,7 +50,7 @@ class_scores = model(image)
 
 `nnio.Preprocessing` class is described [here](./preprocessing.md).
 
-### Option 2: Using already prepared models from our model zoo
+### Option 2: Using models from our model zoo
 
 Some popular models are already built in nnio. Example of using SSD MobileNet object detection model on CPU:
 
@@ -93,10 +95,12 @@ class MyClassifier(nnio.Model):
             resize=(224, 224),
             dtype='float',
             divide_by_255=True,
+            means=[0.485, 0.456, 0.406],
+            stds=[0.229, 0.224, 0.225],
             batch_dimension=True,
             channels_first=True,
         )
 ```
 
-We also recommend to define `get_preprocessing` method like in `nnio.zoo` models.  
+We also recommend to define `get_preprocessing` method like in `nnio.zoo` models (`nnio.Preprocessing` class is described [here](./preprocessing.md)).   
 We encourage users to wrap their loaded models in such classes. Examples of this can be found [here](./model_class.md).
