@@ -1,6 +1,7 @@
 site_name: nnio - Neural Networks inference on accelerators simplified.
 nav:
   - Home: index.md
+  - Installation: install.md
   - Basic Usage:
     - ONNX: basic_onnx.md
     - EdgeTPU: basic_edgetpu.md
