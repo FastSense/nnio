@@ -12,6 +12,7 @@ class Preprocessing(_model.Model):
         dtype='uint8',
         divide_by_255=False,
         means=None,
+        stds=None,
         scales=None,
         padding=False,
         channels_first=False,
@@ -26,6 +27,8 @@ class Preprocessing(_model.Model):
             Data type
         - means: float of list or None
             Substract these values from each channel
+        - stds: float of list or None
+            Divide each channel by these values
         - scales: float of list or None
             Multipy each channel by these values
         - padding: bool
@@ -46,6 +49,9 @@ class Preprocessing(_model.Model):
             MSG = 'If dividing image by 255, specify float data type'
             assert 'float' in dtype, MSG
         self.means = means
+        if stds is not None and scales is not None:
+            raise BaseException('Either scales or stds may be specified, not both')
+        self.stds = stds
         self.scales = scales
         self.padding = padding
         self.channels_first = channels_first
@@ -85,6 +91,8 @@ class Preprocessing(_model.Model):
         # Shift and scale
         if self.means is not None:
             image = image - np.array(self.means)[None, None]
+        if self.stds is not None:
+            image = image / np.array(self.stds)[None, None]
         if self.scales is not None:
             image = image * np.array(self.scales)[None, None]
 
@@ -160,12 +168,13 @@ class Preprocessing(_model.Model):
 
     def __str__(self):
         ''' Outputs preprocessing parameters as a string '''
-        s = 'nnio.Preprocessing(resize={}, dtype={}, divide_by_255={}, means={}, scales={}, padding={}, channels_first={}, batch_dimension={}, bgr={})'
+        s = 'nnio.Preprocessing(resize={}, dtype={}, divide_by_255={}, means={}, stds={}, scales={}, padding={}, channels_first={}, batch_dimension={}, bgr={})'
         s = s.format(
             self.resize,
             self.dtype,
             self.divide_by_255,
             self.means,
+            self.stds,
             self.scales,
             self.padding,
             self.channels_first,

@@ -1,1 +1,1 @@
-from . import detection
+from . import detection, reid
