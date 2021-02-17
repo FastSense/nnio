@@ -35,7 +35,7 @@ class OSNet(_model.Model):
             vector, info = out
         else:
             vector = out
-        vector = vector[0][0]
+        vector = vector[0]
         if return_info:
             return vector, info
         else:

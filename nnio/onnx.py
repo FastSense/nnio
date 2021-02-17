@@ -44,6 +44,9 @@ class ONNXModel(_model.Model):
         start = time.time()
         results = self.sess.run(outputs, inputs)
         end = time.time()
+        # Process output a little
+        if len(outputs) == 1:
+            results = results[0]
         # Return results
         if return_info:
             info = {

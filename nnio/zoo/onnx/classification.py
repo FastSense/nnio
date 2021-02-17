@@ -27,7 +27,7 @@ class MobileNetV2(_model.Model):
         ]
 
     def forward(self, image, return_scores=False):
-        scores = self.model(image)[0][0]
+        scores = self.model(image)[0]
         label = self.labels[scores.argmax()]
         if return_scores:
             return label, scores

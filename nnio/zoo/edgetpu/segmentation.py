@@ -47,7 +47,7 @@ class DeepLabV3(_model.Model):
             For each pixel gives an integer denoting class.
             Class labels are available through .labels attribute of this object.
         '''
-        segmentation = self.model(image)[0][0]
+        segmentation = self.model(image)[0]
         return segmentation
 
     def get_preprocessing(self):
