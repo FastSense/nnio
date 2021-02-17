@@ -6,27 +6,25 @@ from ... import edgetpu as _edgetpu
 
 
 class DeepLabV3(_model.Model):
-    URL_CPU = 'https://github.com/google-coral/edgetpu/raw/master/test_data/deeplabv3_mnv2_pascal_quant.tflite'
-    URL_TPU = 'https://github.com/google-coral/edgetpu/raw/master/test_data/deeplabv3_mnv2_pascal_quant_edgetpu.tflite'
+    URL_CPU = 'https://github.com/google-coral/edgetpu/raw/master/test_data/deeplabv3_mnv2_dm05_pascal_quant.tflite'
+    URL_TPU = 'https://github.com/google-coral/edgetpu/raw/master/test_data/deeplabv3_mnv2_dm05_pascal_quant_edgetpu.tflite'
     URL_LABELS = 'https://github.com/google-coral/edgetpu/raw/master/test_data/pascal_voc_segmentation_labels.txt'
 
-    def __init__(self, device='CPU', version='v2'):
+    def __init__(self, device='CPU'):
         '''
         input:
         - device: str
             "CPU" by default.
             Set "TPU" or "TPU:0" to use the first EdgeTPU device.
             Set "TPU:1" to use the second EdgeTPU device etc.
-        - version: str
-            Either "v1" or "v2"
         '''
         super().__init__()
 
         # Load model
         if device == 'CPU':
-            model_path = self.URL_CPU.format(version)
+            model_path = self.URL_CPU
         else:
-            model_path = self.URL_TPU.format(version)
+            model_path = self.URL_TPU
         self.model = _edgetpu.EdgeTPUModel(model_path, device)
 
         # Load labels from text file
