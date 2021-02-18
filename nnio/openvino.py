@@ -20,8 +20,8 @@ class OpenVINOModel(_model.Model):
         - device: str
             Choose Intel device:
             "CPU", "GPU", "MYRIAD"
-            If there are multiple devices in your system, use indeces:
-            "MYRIAD:0"
+            If there are multiple devices in your system, you can use indeces:
+            "MYRIAD:0" - but it is not recommended since Intel automatically chooses a free device
         '''
         super().__init__()
 
@@ -81,20 +81,16 @@ class OpenVINOModel(_model.Model):
             raise ImportError
         ie = IECore()
         # Get list of MYRIAD devices
-        if 'MYRIAD' in device:
+        if device.startswith('MYRIAD:'):
             myriads = [
                 dev for dev in ie.available_devices
                 if 'MYRIAD' in dev
             ]
-            if ':' in device:
-                _, idx = device.split(':')
-                idx = int(idx)
-            else:
-                idx = 0
-            try:
-                device = myriads[idx]
-            except:
+            _, idx = device.split(':')
+            idx = int(idx)
+            if len(myriads) <= idx:
                 raise BaseException('Cannot find out which device is {}\nAvailable devices: {}'.format(device, ie.available_devices))
+            device = myriads[idx]
         # Load model on device
         net = ie.read_network(model_xml, model_bin)
         print('Loading model to:', device)
