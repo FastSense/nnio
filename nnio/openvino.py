@@ -52,6 +52,7 @@ class OpenVINOModel(_model.Model):
         if len(out.keys()) == 1:
             out = out[list(out.keys())[0]]
         # Measure temperature
+        temperature = None
         if self.device.startswith('MYRIAD.'):
             temperature = self.ie.get_metric(metric_name="DEVICE_THERMAL", device_name=self.device)
             if _utils.LOG_TEMPERATURE:
@@ -61,7 +62,7 @@ class OpenVINOModel(_model.Model):
             info = {
                 'invoke_time': end - start,
             }
-            if self.device.startswith('MYRIAD'):
+            if temperature is not None:
                 info['temperature'] = temperature
             return out, info
         else:
