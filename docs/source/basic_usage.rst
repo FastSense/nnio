@@ -12,7 +12,7 @@ nnio provides three classes for loading models in different formats:
 * :ref:`nnio.EdgeTPUModel`
 * :ref:`nnio.OpenVINOModel`
 
-Loaded models can be simply called as functions using numpy arrays. Look at the example:
+Loaded models can be simply called as functions on numpy arrays. Look at the example:
 
 .. code-block:: python
 
