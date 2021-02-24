@@ -1,5 +1,7 @@
+**************
 What is it
-==================================================================================
+**************
+
 **nnio** is a light-weight python package for easily running neural networks.
 
 It supports running models on CPU as well as some of the edge devices:
@@ -10,14 +12,14 @@ It supports running models on CPU as well as some of the edge devices:
 
 For each device there exists an own library and a model format. We wrap all those in a single well-defined python package.
 
-How to intall
--------------
+Installation
+=============
 nnio is simply installed with pip, but it requires some additional libraries.
 See :ref:`installation`.
 
 
-How to use it
--------------
+Usage
+=============
 
 There are 3 ways one can use nnio:
 
@@ -29,8 +31,10 @@ There are 3 ways one can use nnio:
 
 
 .. toctree::
+    :caption: Table of Contents
     :maxdepth: 2
 
+    Overview <self>
     install
     basic_usage
     zoo
