@@ -16,6 +16,8 @@ Loaded models can be simply called as functions on numpy arrays. Look at the exa
 
 .. code-block:: python
 
+    import nnio
+
     # Create model and put it on TPU device
     model = nnio.EdgeTPUModel(
         model_path='path/to/model_quant_edgetpu.tflite',
