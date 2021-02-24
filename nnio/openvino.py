@@ -32,7 +32,7 @@ class OpenVINOModel(_model.Model):
             model_xml = _utils.file_from_url(model_xml, 'models')
 
         # Create interpreter
-        self.ie, self.net, self.device = self.make_interpreter(model_xml, model_bin, device)
+        self.ie, self.net, self.device = self._make_interpreter(model_xml, model_bin, device)
 
     def forward(self, inputs, return_info=False):
         '''
@@ -69,7 +69,7 @@ class OpenVINOModel(_model.Model):
             return out
 
     @staticmethod
-    def make_interpreter(model_xml, model_bin, device):
+    def _make_interpreter(model_xml, model_bin, device):
         'Load model and create openvino interpreter'
         try:
             from openvino.inference_engine import IECore

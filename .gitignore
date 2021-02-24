@@ -2,3 +2,5 @@ dist
 cheatsheet.txt
 MANIFEST
 .vscode
+docs/build
+docs/source/_build

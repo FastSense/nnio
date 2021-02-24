@@ -22,15 +22,15 @@ class ONNXModel(_model.Model):
         if _utils.is_url(model_path):
             model_path = _utils.file_from_url(model_path, 'models')
         # Load model and create inference session
-        self.sess = self.make_interpreter(model_path)
+        self.sess = self._make_interpreter(model_path)
 
     def forward(self, *inputs, return_info=False):
-        '''
-        input:
-        - *inputs: list of arguments
-            Input numpy arrays
-        - return_time: bool
-            If True, will return inference time
+        r'''
+        Call the model
+
+        :parameter \*inputs: numpy arrays, Inputs to the model
+        :parameter return_info: bool, If True, will return inference time
+        :return: numpy array or list of numpy arrays.
         '''
         assert len(inputs) == len(self.get_input_details())
         # List output names
@@ -80,7 +80,7 @@ class ONNXModel(_model.Model):
         ]
 
     @staticmethod
-    def make_interpreter(model_path):
+    def _make_interpreter(model_path):
         'Load model and create inference session'
         import onnxruntime as rt
         sess = rt.InferenceSession(model_path)

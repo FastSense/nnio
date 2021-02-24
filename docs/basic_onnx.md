@@ -1,3 +1,0 @@
-::: nnio.ONNXModel
-    :docstring:
-    :members:
