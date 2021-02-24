@@ -5,6 +5,9 @@ from . import utils as _utils
 
 
 class ONNXModel(_model.Model):
+    '''
+    nnio provides a class named ONNXModel which can be used to easily work with models saved in onnx format.
+    '''
     def __init__(
         self,
         model_path,

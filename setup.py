@@ -25,6 +25,7 @@ setup(
     author_email='ruslan.baynazarov@fastsense.tech',
     url='https://github.com/FastSense/nnio',
     packages=['nnio', 'nnio.zoo', 'nnio.zoo.edgetpu', 'nnio.zoo.openvino', 'nnio.zoo.onnx'],
+    license="MIT",
     install_requires=[
         'numpy',
         'opencv-python',
