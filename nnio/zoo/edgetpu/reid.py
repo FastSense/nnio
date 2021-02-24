@@ -7,7 +7,7 @@ from ... import edgetpu as _edgetpu
 
 class OSNet(_model.Model):
     '''
-    Omni-Scale Feature Network taken from https://github.com/KaiyangZhou/deep-person-reid and converted to tflite.
+    Omni-Scale Feature Network for Person Re-ID taken from https://github.com/KaiyangZhou/deep-person-reid and converted to tflite.
 
     This is the quantized version. It is not as accurate as its onnx and openvino versions.
 
