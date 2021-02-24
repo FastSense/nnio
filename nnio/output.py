@@ -42,14 +42,15 @@ class DetectionBox:
         text_width=2,
     ):
         '''
-        Draws the detection box on image
+        Draws the detection box on an image
 
-        inputs:
-        - image: numpy array
-        -- Drawing parameters
+        :parameter image: numpy array.
+        :parameter color: RGB color of the frame.
+        :parameter stroke_width: boldness of the frame.
+        :parameter text_color: RGB color of the text.
+        :parameter text_width: boldness of the text.
 
-        output:
-        -- Modified image
+        :return: Image with the box drawn on it.
         '''
         # Box corners:
         start_point = (
