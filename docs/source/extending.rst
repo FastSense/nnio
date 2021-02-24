@@ -40,8 +40,6 @@ We also recommend to define :code:`get_preprocessing` method like in :ref:`nnio.
 We encourage users to wrap their loaded models in such classes. :code:`nnio.Model` abstract base class is described below:
 
 
-.. _nnio.Model:
-
 nnio.Model
 --------------
 

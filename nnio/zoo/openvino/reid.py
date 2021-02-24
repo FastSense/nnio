@@ -6,6 +6,12 @@ from ... import openvino as _openvino
 
 
 class OSNet(_model.Model):
+    '''
+    Omni-Scale Feature Network taken from https://github.com/KaiyangZhou/deep-person-reid and converted to openvino.
+
+    Here is the webcam demo of this model (onnx version) working: https://github.com/FastSense/nnio/tree/master/demos
+    '''
+
     URL_MODEL_BIN = 'https://github.com/FastSense/nnio/raw/master/models/person-reid/osnet_x1_0/osnet_x1_0_fp16.bin'
     URL_MODEL_XML = 'https://github.com/FastSense/nnio/raw/master/models/person-reid/osnet_x1_0/osnet_x1_0_fp16.xml'
 
@@ -14,9 +20,11 @@ class OSNet(_model.Model):
         device='CPU',
     ):
         '''
-        - device: str
+        :parameter device: str.
             Choose Intel device:
-            "CPU", "GPU", "MYRIAD"
+            ``CPU``, ``GPU``, ``MYRIAD``.
+            If there are multiple devices in your system, you can use indeces:
+            ``MYRIAD:0`` but it is not recommended since Intel automatically chooses a free device.
         '''
         super().__init__()
 
@@ -24,6 +32,13 @@ class OSNet(_model.Model):
         self.model = _openvino.OpenVINOModel(self.URL_MODEL_BIN, self.URL_MODEL_XML, device)
 
     def forward(self, image, return_info=False):
+        '''
+        :parameter image: np array.
+            Input image of a person.
+        :parameter return_info: bool.
+            If ``True``, return inference time.
+        :return: np.array of shape ``[512]`` - person appearence vector. You can compare them by cosine or Euclidian distance.
+        '''
         out = self.model(image, return_info=return_info)
         if return_info:
             vector, info = out

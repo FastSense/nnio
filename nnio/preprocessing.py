@@ -6,6 +6,32 @@ from . import model as _model
 from . import utils as _utils
 
 class Preprocessing(_model.Model):
+    '''
+    This class provides functionality of the image preprocessing.
+
+    Example::
+
+        preproc = nnio.Preprocessing(
+            resize=(224, 224),
+            dtype='float32',
+            divide_by_255=True,
+            means=[0.485, 0.456, 0.406],
+            stds=[0.229, 0.224, 0.225],
+            batch_dimension=True,
+            channels_first=True,
+        )
+
+        # Use with numpy image
+        image_preprocessed = preproc(image_rgb)
+
+        # Or use to read image from disk
+        image_preprocessed = preproc('path/to/image.png')
+
+        # Or use to read image from the web
+        image_preprocessed = preproc('http://www.example.com/image.png')
+
+    Object of this type is returned every time you call ``get_preprocessing()`` method of any model from :ref:`nnio.zoo`.
+    '''
     def __init__(
         self,
         resize=None,
@@ -20,27 +46,26 @@ class Preprocessing(_model.Model):
         bgr=False,
     ):
         '''
-        input:
-        - resize: tuple or None
+        :parameter resize: ``None`` or ``tuple``.
             (width, height) - the new size of image
-        - dtype: str on np.dtype
+        :parameter dtype: ``str`` on ``np.dtype``.
             Data type
-        - means: float of list or None
+        :parameter means: ``float`` or ``list`` or ``None``.
             Substract these values from each channel
-        - stds: float of list or None
+        :parameter stds: `float`` or ``list`` or ``None``.
             Divide each channel by these values
-        - scales: float of list or None
+        :parameter scales: ``float`` or ``list`` or ``None``.
             Multipy each channel by these values
-        - padding: bool
-            If True, images will be resized with the same aspect ratio
-        - channels_first: bool
-            If True, image will be returned in [B]CHW format.
-            If False, [B]HWC
-        - batch_dimension: bool
-            If True, add first dimension of size 1
-        - bgr: bool
-            If True, change channels to BRG order
-            If False, keep the RGB order
+        :parameter padding: ``bool``.
+            If ``True``, images will be resized with the same aspect ratio
+        :parameter channels_first: ``bool``.
+            If ``True``, image will be returned in ``[B]CHW`` format.
+            If ``False``, ``[B]HWC``.
+        :parameter batch_dimension: ``bool``.
+            If ``True``, add first dimension of size 1.
+        :parameter bgr: ``bool``.
+            If ``True``, change channels to BRG order.
+            If ``False``, keep the RGB order.
         '''
         self.resize = resize
         self.dtype = dtype
@@ -61,16 +86,16 @@ class Preprocessing(_model.Model):
     def forward(self, image, return_original=False):
         '''
         Preprocess the image.
-        input:
-        - image: np.ndarray of type uint8 or str
+
+        :parameter image: np.ndarray of type ``uint8`` or ``str``
             RGB image
-            If str, it will be concerned as image path.
-        - return_original: bool
-            If True, will return tuple of (preprocessed_image, original_image)
+            If ``str``, it will be concerned as image path.
+        :parameter return_original: ``bool``.
+            If ``True``, will return tuple of ``(preprocessed_image, original_image)``
         '''
         # Read image
         if isinstance(image, str):
-            image = self.read_image(image)
+            image = self._read_image(image)
         if return_original:
             orig_image = image.copy()
         if str(image.dtype) != 'uint8':
@@ -82,7 +107,7 @@ class Preprocessing(_model.Model):
 
         # Resize image
         if self.resize is not None:
-            image = self.resize_image(image, self.resize, self.padding)
+            image = self._resize_image(image, self.resize, self.padding)
 
         # Divide by 255
         if self.divide_by_255:
@@ -111,7 +136,7 @@ class Preprocessing(_model.Model):
             return image.copy()
 
     @staticmethod
-    def read_image(path):
+    def _read_image(path):
         ''' Read image from file or url '''
         # Download image if path is url
         is_url = _utils.is_url(path)
@@ -131,14 +156,17 @@ class Preprocessing(_model.Model):
         return image
 
     @staticmethod
-    def resize_image(image, resize, padding=False):
+    def _resize_image(image, resize, padding=False):
         ''' Resize image
-        input:
-        - image
-        - resize: tuple
-            (width, height) - the new size
-        - padding: bool
-            If True, image will be resized with the same aspect ratio
+        
+        :parameter image: np.ndarray of type ``uint8`` or ``str``
+            RGB image
+            If ``str``, it will be concerned as image path.
+        :parameter resize: ``None`` or ``tuple``.
+            (width, height) - the new size of image
+        :parameter padding: ``bool``.
+            If ``True``, images will be resized with the same aspect ratio
+        :return: np.array. Resized image.
         '''
         if not padding:
             # pylint: disable=no-member
@@ -167,7 +195,9 @@ class Preprocessing(_model.Model):
         return image
 
     def __str__(self):
-        ''' Outputs preprocessing parameters as a string '''
+        '''
+        :return: full description of the ``Preprocessing`` object
+        '''
         s = 'nnio.Preprocessing(resize={}, dtype={}, divide_by_255={}, means={}, stds={}, scales={}, padding={}, channels_first={}, batch_dimension={}, bgr={})'
         s = s.format(
             self.resize,
@@ -184,4 +214,5 @@ class Preprocessing(_model.Model):
         return s
 
     def __eq__(self, other):
+        '''Compare two ``Preprocessing`` objects. Returns ``True`` only if all preprocessing parameters are the same.'''
         return str(self) == str(other)

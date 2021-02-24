@@ -5,23 +5,25 @@ from . import utils as _utils
 
 
 class OpenVINOModel(_model.Model):
+    '''
+    This class works with OpenVINO models on CPU, Intel GPU and Intel Movidius Myriad.
+
+    Using this class requires some libraries to be installed. See :ref:`installation`.
+    '''
     def __init__(
         self,
-        model_bin,
-        model_xml,
+        model_bin: str,
+        model_xml: str,
         device='CPU',
     ):
         '''
-        input:
-        - model_bin: str
-            url or path to the openvino binary model file
-        - model_xml: str
-            url or path to the openvino xml model file
-        - device: str
+        :parameter model_bin: URL or path to the openvino binary model file
+        :parameter model_xml: URL or path to the openvino xml model file
+        :parameter device: str.
             Choose Intel device:
-            "CPU", "GPU", "MYRIAD"
+            ``CPU``, ``GPU``, ``MYRIAD``
             If there are multiple devices in your system, you can use indeces:
-            "MYRIAD:0" - but it is not recommended since Intel automatically chooses a free device
+            ``MYRIAD:0`` but it is not recommended since Intel automatically chooses a free device.
         '''
         super().__init__()
 
@@ -35,12 +37,10 @@ class OpenVINOModel(_model.Model):
         self.ie, self.net, self.device = self._make_interpreter(model_xml, model_bin, device)
 
     def forward(self, inputs, return_info=False):
-        '''
-        input:
-        - inputs: numpy array
-            Input data
-        - return_time: bool
-            If True, will return inference time
+        r'''
+        :parameter inputs: numpy array, input to the model
+        :parameter return_info: bool, If True, will return inference time
+        :return: numpy array or list of numpy arrays.
         '''
         # Find name of the input to the model
         input_name = list(self.net.input_info.keys())[0]

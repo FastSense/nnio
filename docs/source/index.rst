@@ -34,5 +34,5 @@ There are 3 ways one can use nnio:
     install
     basic_usage
     zoo
-    extending
     utils
+    extending

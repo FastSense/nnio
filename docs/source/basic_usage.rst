@@ -47,6 +47,7 @@ nnio.ONNXModel
 
 .. autoclass:: nnio.ONNXModel
     :members:
+    :special-members:
 
 
 .. _nnio.EdgeTPUModel:
@@ -56,6 +57,7 @@ nnio.EdgeTPUModel
 
 .. autoclass:: nnio.EdgeTPUModel
     :members:
+    :special-members:
 
 
 .. _nnio.OpenVINOModel:
@@ -65,3 +67,4 @@ nnio.OpenVINOModel
 
 .. autoclass:: nnio.OpenVINOModel
     :members:
+    :special-members:

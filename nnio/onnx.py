@@ -6,16 +6,36 @@ from . import utils as _utils
 
 class ONNXModel(_model.Model):
     '''
-    nnio provides a class named ONNXModel which can be used to easily work with models saved in onnx format.
+    This class is used with saved onnx models.
+
+    Usage example::
+
+        # Create model
+        model = nnio.ONNXModel('path/to/model.onnx')
+        # Create preprocessor
+        preproc = nnio.Preprocessing(
+            resize=(300, 300),
+            dtype='uint8',
+            batch_dimension=True,
+            channels_first=True,
+        )
+
+        # Preprocess your numpy image
+        image = preproc(image_rgb)
+
+        # Make prediction
+        class_scores = model(image)
+
+
+    Using this class requires onnxruntime to be installed. See :ref:`installation`.
     '''
     def __init__(
         self,
-        model_path,
+        model_path: str,
     ):
         '''
-        input:
-        - model_path: str
-            url or path to the .onnx model
+
+        :parameter model_path: URL or path to the .onnx model
         '''
         super().__init__()
         # Download file from internet
@@ -25,13 +45,6 @@ class ONNXModel(_model.Model):
         self.sess = self._make_interpreter(model_path)
 
     def forward(self, *inputs, return_info=False):
-        r'''
-        Call the model
-
-        :parameter \*inputs: numpy arrays, Inputs to the model
-        :parameter return_info: bool, If True, will return inference time
-        :return: numpy array or list of numpy arrays.
-        '''
         assert len(inputs) == len(self.get_input_details())
         # List output names
         outputs = [

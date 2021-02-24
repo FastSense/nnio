@@ -12,19 +12,22 @@ EDGETPU_SHARED_LIB = {
 
 
 class EdgeTPUModel(_model.Model):
+    '''
+    This class works with tflite models on CPU and with quantized tflite models on Google Coral Edge TPU.
+
+    Using this class requires some libraries to be installed. See :ref:`installation`.
+    '''
     def __init__(
         self,
-        model_path,
+        model_path: str,
         device='CPU'
     ):
         '''
-        input:
-        - model_path: str
-            url or path to the tflite model
-        - device: str
-            "CPU" by default.
-            Set "TPU" or "TPU:0" to use the first EdgeTPU device.
-            Set "TPU:1" to use the second EdgeTPU device etc.
+        :parameter model_path: URL or path to the tflite model
+        :parameter device: str.
+            ``CPU`` by default.
+            Set ``TPU`` or ``TPU:0`` to use the first EdgeTPU device.
+            Set ``TPU:1`` to use the second EdgeTPU device etc.
         '''
         super().__init__()
         # Download file from internet
@@ -36,13 +39,6 @@ class EdgeTPUModel(_model.Model):
         self.interpreter.allocate_tensors()
 
     def forward(self, *inputs, return_info=False):
-        '''
-        input:
-        - *inputs: list of arguments
-            Input numpy arrays
-        - return_time: bool
-            If True, will return inference time
-        '''
         assert len(inputs) == self.n_inputs
         start = time.time()
         # Put input tensors into model

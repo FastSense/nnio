@@ -7,6 +7,14 @@ from ... import output as _output
 
 
 class SSDMobileNetV1(_model.Model):
+    '''
+    SSDMobileNetV1 object detection model trained on COCO dataset.
+
+    Model is taken from https://github.com/onnx/models
+
+    Here is the webcam demo of this model working: https://github.com/FastSense/nnio/tree/master/demos
+    '''
+
     URL_MODEL = 'https://github.com/onnx/models/raw/master/vision/object_detection_segmentation/ssd-mobilenetv1/model/ssd_mobilenet_v1_10.onnx'
     URL_LABELS = 'https://github.com/amikelive/coco-labels/raw/master/coco-labels-paper.txt'
 
@@ -20,19 +28,16 @@ class SSDMobileNetV1(_model.Model):
 
         # Load labels from text file
         labels_path = _utils.file_from_url(self.URL_LABELS, 'labels')
-        self.labels = [
+        self._labels = [
             line.strip()
             for line in open(labels_path)
         ]
 
     def forward(self, image):
         '''
-        input:
-        - image: np array
-            Batch of input images
-        output:
-        - out_batch: list
-            List of lists of boxes. First index is image id inside batch. Second index is box's number
+        :parameter image: np array.
+            Input image
+        :return: list of :ref:`nnio.DetectionBox`
         '''
         boxes, classes, scores, num_detections = self.model(image)
         # Parse output
@@ -53,3 +58,10 @@ class SSDMobileNetV1(_model.Model):
             dtype='uint8',
             batch_dimension=True,
         )
+
+    @property
+    def labels(self):
+        '''
+        :return: list of COCO labels
+        '''
+        return self._labels

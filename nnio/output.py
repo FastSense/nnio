@@ -12,18 +12,18 @@ class DetectionBox:
         score=1.0,
     ):
         '''
-        inputs:
-        - x_1: float in range [0, 1]
-            Relative x coordinate of top-left corner
-        - y_1: float in range [0, 1]
-            Relative y coordinate of top-left corner
-        - x_2: float in range [0, 1]
-            Relative x coordinate of bottom-right corner
-        - y_2: float in range [0, 1]
-            Relative y coordinate of bottom-right corner
-        - label: str or None
-            Class label of the detected object
-        - score: float
+        
+        :parameter x_1: ``float`` in range ``[0, 1]``.
+            Relative x coordinate of top-left corner.
+        :parameter y_1: ``float`` in range ``[0, 1]``.
+            Relative y coordinate of top-left corner.
+        :parameter x_2: ``float`` in range ``[0, 1]``.
+            Relative x coordinate of bottom-right corner.
+        :parameter y_2: ``float`` in range ``[0, 1]``.
+            Relative y coordinate of bottom-right corner.
+        :parameter label: ``str`` or ``None``.
+            Class label of the detected object.
+        :parameter score: ``float``.
             Detection score
         '''
         self.x_1 = x_1

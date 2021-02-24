@@ -10,22 +10,25 @@ class Model(abc.ABC):
 
     @abc.abstractmethod
     def forward(self, *args, **kwargs):
-        """
-        This function is called when the model is called.
-        Override this function with your model's behavior
-        """
+        r'''
+        This method is called when the model is called.
+
+        :parameter \*inputs: numpy arrays, Inputs to the model
+        :parameter return_info: bool, If True, will return inference time
+        :return: numpy array or list of numpy arrays.
+        '''
 
     def get_preprocessing(self):
         """
-        Returns nnio.Preprocessing object.
+        :return: nnio.Preprocessing object.
         """
 
     def get_input_details(self):
         """
-        Returns human-readable model input details.
+        :return: human-readable model input details.
         """
 
     def get_output_details(self):
         """
-        Returns human-readable model output details.
+        :return: human-readable model output details.
         """

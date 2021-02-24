@@ -7,6 +7,12 @@ from ... import output as _output
 
 
 class SSDMobileNet(_model.Model):
+    '''
+    MobileNet V2 (or V1) SSD object detector trained on COCO dataset.
+
+    Model is taken from https://github.com/google-coral/edgetpu/tree/master/test_data
+    '''
+
     URL_CPU = 'https://github.com/google-coral/edgetpu/raw/master/test_data/ssd_mobilenet_{}_coco_quant_postprocess.tflite'
     URL_TPU = 'https://github.com/google-coral/edgetpu/raw/master/test_data/ssd_mobilenet_{}_coco_quant_postprocess_edgetpu.tflite'
     URL_LABELS = 'https://github.com/google-coral/edgetpu/raw/master/test_data/coco_labels.txt'
@@ -18,15 +24,14 @@ class SSDMobileNet(_model.Model):
         threshold=0.5
     ):
         '''
-        input:
-        - device: str
-            "CPU" by default.
-            Set "TPU" or "TPU:0" to use the first EdgeTPU device.
-            Set "TPU:1" to use the second EdgeTPU device etc.
-        - version: str
+        :parameter device: str.
+            ``CPU`` by default.
+            Set ``TPU`` or ``TPU:0`` to use the first EdgeTPU device.
+            Set ``TPU:1`` to use the second EdgeTPU device etc.
+        :parameter version: str.
             Either "v1" or "v2"
-        - threshold: float
-            Detection threshold
+        :parameter threshold: float.
+            Detection threshold. Affects the detector's sensitivity.
         '''
         super().__init__()
 
@@ -41,12 +46,19 @@ class SSDMobileNet(_model.Model):
 
         # Load labels from text file
         labels_path = _utils.file_from_url(self.URL_LABELS, 'labels_google')
-        self.labels = {
+        self._labels = {
             int(line.split()[0]): line.strip().split()[1]
             for line in open(labels_path)
         }
 
     def forward(self, image, return_info=False):
+        '''
+        :parameter image: np array.
+            Input image
+        :parameter return_info: bool.
+            If ``True``, return inference time.
+        :return: list of :ref:`nnio.DetectionBox`
+        '''
         out = self.model(image, return_info=return_info)
         if return_info:
             (boxes, classes, scores, _num_detections), info = out
@@ -75,8 +87,22 @@ class SSDMobileNet(_model.Model):
             batch_dimension=True,
         )
 
+    @property
+    def labels(self):
+        '''
+        :return: list of COCO labels
+        '''
+        return self._labels
+
+
 
 class SSDMobileNetFace(_model.Model):
+    '''
+    MobileNet V2 SSD face detector.
+
+    Model is taken from https://github.com/google-coral/edgetpu/tree/master/test_data
+    '''
+
     URL_CPU = 'https://github.com/google-coral/edgetpu/raw/master/test_data/ssd_mobilenet_v2_face_quant_postprocess.tflite'
     URL_TPU = 'https://github.com/google-coral/edgetpu/raw/master/test_data/ssd_mobilenet_v2_face_quant_postprocess_edgetpu.tflite'
 
@@ -86,13 +112,12 @@ class SSDMobileNetFace(_model.Model):
         threshold=0.5
     ):
         '''
-        input:
-        - device: str
-            "CPU" by default.
-            Set "TPU" or "TPU:0" to use the first EdgeTPU device.
-            Set "TPU:1" to use the second EdgeTPU device etc.
-        - threshold: float
-            Detection threshold. It affects sensitivity of the detector.
+        :parameter device: str.
+            ``CPU`` by default.
+            Set ``TPU`` or ``TPU:0`` to use the first EdgeTPU device.
+            Set ``TPU:1`` to use the second EdgeTPU device etc.
+        :parameter threshold: float.
+            Detection threshold. Affects the detector's sensitivity.
         '''
         super().__init__()
 
@@ -106,6 +131,13 @@ class SSDMobileNetFace(_model.Model):
         self.model = _edgetpu.EdgeTPUModel(model_path, device)
 
     def forward(self, image, return_info=False):
+        '''
+        :parameter image: np array.
+            Input image
+        :parameter return_info: bool.
+            If ``True``, return inference time.
+        :return: list of :ref:`nnio.DetectionBox`
+        '''
         out = self.model(image, return_info=return_info)
         if return_info:
             (boxes, _, scores, _num_detections), info = out

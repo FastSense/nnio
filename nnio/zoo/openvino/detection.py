@@ -7,6 +7,14 @@ from ... import output as _output
 
 
 class SSDMobileNetV2(_model.Model):
+    '''
+    SSDMobileNetV2 object detection model trained on COCO dataset.
+
+    Model is taken from https://docs.openvinotoolkit.org/latest/omz_models_public_ssd_mobilenet_v2_coco_ssd_mobilenet_v2_coco.html and converted to openvino.
+
+    Here is the webcam demo of an analogous model (onnx version) working: https://github.com/FastSense/nnio/tree/master/demos
+    '''
+
     URL_MODEL_BIN = 'https://github.com/FastSense/nnio/raw/development/models/openvino/ssd_mobilenet_v2_coco/ssd_mobilenet_v2_coco_fp16.bin'
     URL_MODEL_XML = 'https://github.com/FastSense/nnio/raw/development/models/openvino/ssd_mobilenet_v2_coco/ssd_mobilenet_v2_coco_fp16.xml'
     URL_LABELS = 'https://github.com/amikelive/coco-labels/raw/master/coco-labels-paper.txt'
@@ -18,14 +26,15 @@ class SSDMobileNetV2(_model.Model):
         threshold=0.5
     ):
         '''
-        input:
-        - device: str
+        :parameter device: str.
             Choose Intel device:
-            "CPU", "GPU", "MYRIAD"
-        - threshold: float
+            ``CPU``, ``GPU``, ``MYRIAD``.
+            If there are multiple devices in your system, you can use indeces:
+            ``MYRIAD:0`` but it is not recommended since Intel automatically chooses a free device.
+        :parameter threshold: float.
             Detection threshold. It affects sensitivity of the detector.
-        - lite: bool
-            If True, use SSDLite version
+        :parameter lite: bool.
+            If True, use SSDLite version (idk exactly how it is lighter).
         '''
         super().__init__()
 
@@ -42,12 +51,19 @@ class SSDMobileNetV2(_model.Model):
 
         # Load labels from text file
         labels_path = _utils.file_from_url(self.URL_LABELS, 'labels')
-        self.labels = [
+        self._labels = [
             line.strip()
             for line in open(labels_path)
         ]
 
     def forward(self, image, return_info=False):
+        '''
+        :parameter image: np array.
+            Input image of a person.
+        :parameter return_info: bool.
+            If ``True``, return inference time.
+        :return: list of :ref:`nnio.DetectionBox`
+        '''
         results = self.model(image, return_info=return_info)
         if return_info:
             results, info = results
@@ -74,3 +90,10 @@ class SSDMobileNetV2(_model.Model):
             batch_dimension=True,
             bgr=True,
         )
+
+    @property
+    def labels(self):
+        '''
+        :return: list of COCO labels
+        '''
+        return self._labels

@@ -6,6 +6,12 @@ from ... import onnx as _onnx
 
 
 class OSNet(_model.Model):
+    '''
+    Omni-Scale Feature Network taken from https://github.com/KaiyangZhou/deep-person-reid and converted to onnx.
+
+    Here is the webcam demo of this model working: https://github.com/FastSense/nnio/tree/master/demos
+    '''
+
     URL = 'https://github.com/FastSense/nnio/raw/master/models/person-reid/osnet_x1_0/osnet_x1_0_op10.onnx'
 
     def __init__(
@@ -19,6 +25,13 @@ class OSNet(_model.Model):
         self.model = _onnx.ONNXModel(self.URL)
 
     def forward(self, image, return_info=False):
+        '''
+        :parameter image: np array.
+            Input image of a person.
+        :parameter return_info: bool.
+            If ``True``, return inference time.
+        :return: np.array of shape ``[512]`` - person appearence vector. You can compare them by cosine or Euclidian distance.
+        '''
         out = self.model(image, return_info=return_info)
         if return_info:
             vector, info = out
