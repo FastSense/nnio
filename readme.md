@@ -1,87 +1,47 @@
 # nnio
-## Installation:
 
-```
-pip install nnio
-```
+Please refer to the [project's documentation](https://nnio.readthedocs.io/).
 
-## Low-level API
-To write your own model, derive from `nnio.Model` class:
+## What is it
+
+**nnio** is a light-weight python package for easily running neural networks.
+
+It supports running models on CPU as well as some of the edge devices:
+
+* Google USB Accelerator
+* Intel Compute Stock
+* Intel integrated GPUs
+
+For each device there exists an own library and a model format. We wrap all those in a single well-defined python package.
+
+Look at this simple example:
 
 ```python
 import nnio
 
-class MyModel(nnio.Model):
-    def __init__(self):
-        super().__init__()
-
-    def forward(self, image):
-        # Do something with image
-        # For example, classification
-        return 'cat'
-
-    def get_preprocessing(self):
-        return nnio.Preprocessing(
-            resize=(224, 224),
-            dtype='float',
-            divide_by_255=True,
-            batch_dimension=True,
-            channels_first=True,
-        )
-```
-
-Then use this model as:
-
-```python
-# Create model
-model = MyModel()
-# Get preprocessing function
-preproc = model.get_preprocessing()
-# Load image from file and preprocess it
-image = preproc('/path/to/image.png')
-# Pass image to model
-result = model(image)
-```
-
-## High-level API
-This package is designed to use with EdgeTPU and OpenVINO devices.  
-
-This is example of using model with EdgeTPU:
-
-```python
-# Create model
+# Create model and put it on a Google Coral Edge TPU device
 model = nnio.EdgeTPUModel(
-    # Model path can be URL:
-    model_path='https://github.com/google-coral/edgetpu/raw/master/test_data/mobilenet_v2_1.0_224_quant.tflite',
-    # Use CPU for now:
-    device='CPU',
+    model_path='path/to/model_quant_edgetpu.tflite',
+    device='TPU',
 )
 # Create preprocessor
 preproc = nnio.Preprocessing(
     resize=(224, 224),
-    dtype='uint8',
-    padding=True,
     batch_dimension=True,
 )
 
-# Read input file
-image = preproc('/path/to/image.png')
+# Preprocess your numpy image
+image = preproc(image_rgb)
 
 # Make prediction
 class_scores = model(image)
 ```
 
-## Ready to use models
-Example using SSDMobileNetV1 for object detection:
+**nnio** was developed for the [Fast Sense X](https://fastsense.readthedocs.io/en/latest/) microcomputer.
+It has **six neural accelerators**, which are all supported by nnio:
 
-```python
-# Load model
-model = nnio.zoo.onnx.detection.SSDMobileNetV1()
+* 3 x [Google Coral Edge TPU](https://coral.ai/)
+* 2 x [Intel VPU](https://www.intel.ru/content/www/ru/ru/products/processors/movidius-vpu/movidius-myriad-x.html)
+* an integrated Intel GPU
 
-# Get preprocessing function
-preproc = model.get_preprocessing()
-
-# Pass image to the neural network
-image_prepared = preproc(image_rgb)
-boxes = model(image_prepared)
-```
+[More usage examples](https://nnio.readthedocs.io/en/latest/basic_usage.html) can be found in the [documentation](https://nnio.readthedocs.io/).

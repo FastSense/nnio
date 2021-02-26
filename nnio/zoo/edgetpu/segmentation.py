@@ -9,7 +9,7 @@ class DeepLabV3(_model.Model):
     '''
     DeepLabV3 instance segmentation model trained in Pascal VOC dataset.
 
-    Model is taken from https://github.com/google-coral/edgetpu/tree/master/test_data
+    Model is taken from the `google-coral repo <https://github.com/google-coral/edgetpu/tree/master/test_data>`_.
     '''
 
     URL_CPU = 'https://github.com/google-coral/edgetpu/raw/master/test_data/deeplabv3_mnv2_dm05_pascal_quant.tflite'

@@ -6,7 +6,7 @@ Extending nnio
 Using our API to wrap around your own custom models
 ----------------------------------------------------
 
-:code:`nnio.Model` is an abstract class from which all models in nnio are derived. It is easy to use by redefining :code:`forward` method:
+:class:`nnio.Model` is an abstract class from which all models in nnio are derived. It is easy to use by redefining :code:`forward` method:
 
 .. code-block:: python
 
@@ -36,8 +36,8 @@ Using our API to wrap around your own custom models
             )
 
 
-We also recommend to define :code:`get_preprocessing` method like in :ref:`nnio.zoo` models. See :ref:`nnio.Preprocessing`.
-We encourage users to wrap their loaded models in such classes. :code:`nnio.Model` abstract base class is described below:
+We also recommend to define :code:`get_preprocessing` method like in :ref:`nnio.zoo` models. See :class:`nnio.Preprocessing`.
+We encourage users to wrap their loaded models in such classes. :class:`nnio.Model` abstract base class is described below:
 
 
 nnio.Model

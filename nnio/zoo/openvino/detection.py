@@ -10,9 +10,9 @@ class SSDMobileNetV2(_model.Model):
     '''
     SSDMobileNetV2 object detection model trained on COCO dataset.
 
-    Model is taken from https://docs.openvinotoolkit.org/latest/omz_models_public_ssd_mobilenet_v2_coco_ssd_mobilenet_v2_coco.html and converted to openvino.
+    Model is taken `from openvino <https://docs.openvinotoolkit.org/latest/omz_models_public_ssd_mobilenet_v2_coco_ssd_mobilenet_v2_coco.html>`_ and converted to openvino.
 
-    Here is the webcam demo of an analogous model (onnx version) working: https://github.com/FastSense/nnio/tree/master/demos
+    Here is the `webcam demo <https://github.com/FastSense/nnio/tree/master/demos>`_ of an analogous model (:class:`nnio.zoo.onnx.detection.SSDMobileNetV1`) working.
     '''
 
     URL_MODEL_BIN = 'https://github.com/FastSense/nnio/raw/development/models/openvino/ssd_mobilenet_v2_coco/ssd_mobilenet_v2_coco_fp16.bin'
@@ -62,7 +62,7 @@ class SSDMobileNetV2(_model.Model):
             Input image of a person.
         :parameter return_info: bool.
             If ``True``, return inference time.
-        :return: list of :ref:`nnio.DetectionBox`
+        :return: list of :class:`nnio.DetectionBox`
         '''
         results = self.model(image, return_info=return_info)
         if return_info:

@@ -9,7 +9,7 @@ class MobileNet(_model.Model):
     '''
     MobileNet V2 (or V1) classifier trained on ImageNet
 
-    Model is taken from https://github.com/google-coral/edgetpu/tree/master/test_data
+    Model is taken from the `google-coral repo <https://github.com/google-coral/edgetpu/tree/master/test_data>`_
     '''
 
     URL_CPU = 'https://github.com/google-coral/edgetpu/raw/master/test_data/mobilenet_{}_1.0_224_quant.tflite'

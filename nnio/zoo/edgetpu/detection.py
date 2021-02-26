@@ -10,7 +10,9 @@ class SSDMobileNet(_model.Model):
     '''
     MobileNet V2 (or V1) SSD object detector trained on COCO dataset.
 
-    Model is taken from https://github.com/google-coral/edgetpu/tree/master/test_data
+    Model is taken from the `google-coral repo <https://github.com/google-coral/edgetpu/tree/master/test_data>`_.
+
+    Here is the `webcam demo <https://github.com/FastSense/nnio/tree/master/demos>`_ of an analogous model (:class:`nnio.zoo.onnx.detection.SSDMobileNetV1`) working.
     '''
 
     URL_CPU = 'https://github.com/google-coral/edgetpu/raw/master/test_data/ssd_mobilenet_{}_coco_quant_postprocess.tflite'
@@ -57,7 +59,7 @@ class SSDMobileNet(_model.Model):
             Input image
         :parameter return_info: bool.
             If ``True``, return inference time.
-        :return: list of :ref:`nnio.DetectionBox`
+        :return: list of :class:`nnio.DetectionBox`
         '''
         out = self.model(image, return_info=return_info)
         if return_info:
@@ -100,7 +102,7 @@ class SSDMobileNetFace(_model.Model):
     '''
     MobileNet V2 SSD face detector.
 
-    Model is taken from https://github.com/google-coral/edgetpu/tree/master/test_data
+    Model is taken from the `google-coral repo <https://github.com/google-coral/edgetpu/tree/master/test_data>`_.
     '''
 
     URL_CPU = 'https://github.com/google-coral/edgetpu/raw/master/test_data/ssd_mobilenet_v2_face_quant_postprocess.tflite'
@@ -136,7 +138,7 @@ class SSDMobileNetFace(_model.Model):
             Input image
         :parameter return_info: bool.
             If ``True``, return inference time.
-        :return: list of :ref:`nnio.DetectionBox`
+        :return: list of :class:`nnio.DetectionBox`
         '''
         out = self.model(image, return_info=return_info)
         if return_info:

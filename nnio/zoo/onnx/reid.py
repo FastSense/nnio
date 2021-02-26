@@ -7,9 +7,9 @@ from ... import onnx as _onnx
 
 class OSNet(_model.Model):
     '''
-    Omni-Scale Feature Network for Person Re-ID taken from https://github.com/KaiyangZhou/deep-person-reid and converted to onnx.
+    Omni-Scale Feature Network for Person Re-ID taken from `here <https://github.com/KaiyangZhou/deep-person-reid>`_ and converted to onnx.
 
-    Here is the webcam demo of this model working: https://github.com/FastSense/nnio/tree/master/demos
+    Here is the `webcam demo <https://github.com/FastSense/nnio/tree/master/demos>`_ of this model working.
     '''
 
     URL = 'https://github.com/FastSense/nnio/raw/master/models/person-reid/osnet_x1_0/osnet_x1_0_op10.onnx'

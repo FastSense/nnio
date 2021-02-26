@@ -1,16 +1,17 @@
 .. _basic_usage:
 
+***********************
 Basic Usage
-===================
+***********************
 
 Using your saved models
------------------------
+===========================
 
 nnio provides three classes for loading models in different formats:
 
-* :ref:`nnio.ONNXModel`
-* :ref:`nnio.EdgeTPUModel`
-* :ref:`nnio.OpenVINOModel`
+* :class:`nnio.ONNXModel`
+* :class:`nnio.EdgeTPUModel`
+* :class:`nnio.OpenVINOModel`
 
 Loaded models can be simply called as functions on numpy arrays. Look at the example:
 
@@ -37,35 +38,20 @@ Loaded models can be simply called as functions on numpy arrays. Look at the exa
     # Make prediction
     class_scores = model(image)
 
-See also :ref:`nnio.Preprocessing` documentation.
+See also :class:`nnio.Preprocessing` documentation.
 
-Below is the description of the basic nnio model classes:
-
-
-.. _nnio.ONNXModel:
-
-nnio.ONNXModel
---------------
+Description of the basic model classes
+===============================================
 
 .. autoclass:: nnio.ONNXModel
     :members:
     :special-members:
 
 
-.. _nnio.EdgeTPUModel:
-
-nnio.EdgeTPUModel
-------------------
-
 .. autoclass:: nnio.EdgeTPUModel
     :members:
     :special-members:
 
-
-.. _nnio.OpenVINOModel:
-
-nnio.OpenVINOModel
-------------------
 
 .. autoclass:: nnio.OpenVINOModel
     :members:

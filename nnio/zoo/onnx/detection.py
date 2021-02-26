@@ -10,9 +10,9 @@ class SSDMobileNetV1(_model.Model):
     '''
     SSDMobileNetV1 object detection model trained on COCO dataset.
 
-    Model is taken from https://github.com/onnx/models
+    Model is taken from the `ONNX Model Zoo <https://github.com/onnx/models>`_.
 
-    Here is the webcam demo of this model working: https://github.com/FastSense/nnio/tree/master/demos
+    Here is the `webcam demo <https://github.com/FastSense/nnio/tree/master/demos>`_ of this model working.
     '''
 
     URL_MODEL = 'https://github.com/onnx/models/raw/master/vision/object_detection_segmentation/ssd-mobilenetv1/model/ssd_mobilenet_v1_10.onnx'
@@ -37,7 +37,7 @@ class SSDMobileNetV1(_model.Model):
         '''
         :parameter image: np array.
             Input image
-        :return: list of :ref:`nnio.DetectionBox`
+        :return: list of :class:`nnio.DetectionBox`
         '''
         boxes, classes, scores, num_detections = self.model(image)
         # Parse output

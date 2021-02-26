@@ -7,9 +7,9 @@ from ... import openvino as _openvino
 
 class OSNet(_model.Model):
     '''
-    Omni-Scale Feature Network for Person Re-ID taken from https://github.com/KaiyangZhou/deep-person-reid and converted to openvino.
+    Omni-Scale Feature Network for Person Re-ID taken from `here <https://github.com/KaiyangZhou/deep-person-reid>`_ and converted to openvino.
 
-    Here is the webcam demo of this model (onnx version) working: https://github.com/FastSense/nnio/tree/master/demos
+    Here is the `webcam demo <https://github.com/FastSense/nnio/tree/master/demos>`_ of this model (onnx version) working.
     '''
 
     URL_MODEL_BIN = 'https://github.com/FastSense/nnio/raw/master/models/person-reid/osnet_x1_0/osnet_x1_0_fp16.bin'

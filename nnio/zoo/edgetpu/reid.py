@@ -7,11 +7,11 @@ from ... import edgetpu as _edgetpu
 
 class OSNet(_model.Model):
     '''
-    Omni-Scale Feature Network for Person Re-ID taken from https://github.com/KaiyangZhou/deep-person-reid and converted to tflite.
+    Omni-Scale Feature Network for Person Re-ID taken from `torchreid <https://github.com/KaiyangZhou/deep-person-reid>`_ and converted to tflite.
 
     This is the quantized version. It is not as accurate as its onnx and openvino versions.
 
-    Here is the webcam demo of this model (onnx version) working: https://github.com/FastSense/nnio/tree/master/demos
+    Here is the `webcam demo <https://github.com/FastSense/nnio/tree/master/demos>`_ of this model (onnx version) working.
     '''
 
     URL_CPU = 'https://github.com/FastSense/nnio/raw/master/models/person-reid/osnet_x1_0/osnet_x1_0_quant.tflite'

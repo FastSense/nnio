@@ -9,7 +9,7 @@ class MobileNetV2(_model.Model):
     '''
     MobileNetV2 classifier trained on ImageNet
 
-    Model is taken from https://github.com/onnx/models
+    Model is taken from the `ONNX Model Zoo <https://github.com/onnx/models>`_.
     '''
 
     URL_MODEL = 'https://github.com/onnx/models/raw/master/vision/classification/mobilenet/model/mobilenetv2-7.onnx'

@@ -25,7 +25,7 @@ Some popular models are already built in nnio. Example of using SSD MobileNet ob
     # Make prediction
     boxes = model(image)
 
-Here :code:`boxes` is a list of :ref:`nnio.DetectionBox` instances.
+Here :code:`boxes` is a list of :class:`nnio.DetectionBox` instances.
 
 ONNX
 ==========

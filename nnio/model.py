@@ -20,7 +20,7 @@ class Model(abc.ABC):
 
     def get_preprocessing(self):
         """
-        :return: nnio.Preprocessing object.
+        :return: :class:`nnio.Preprocessing` object.
         """
 
     def get_input_details(self):
