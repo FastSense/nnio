@@ -6,8 +6,8 @@ Please refer to the [project's documentation](https://nnio.readthedocs.io/).
 
 It supports running models on CPU as well as some of the edge devices:
 
-* Google USB Accelerator
-* Intel Compute Stock
+* [Google USB Accelerator](https://coral.ai/products/accelerator/)
+* [Intel Compute Stick](https://www.intel.ru/content/www/ru/ru/products/boards-kits/compute-stick.html)
 * Intel integrated GPUs
 
 For each device there exists an own library and a model format. We wrap all those in a single well-defined python package.
