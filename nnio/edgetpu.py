@@ -12,19 +12,22 @@ EDGETPU_SHARED_LIB = {
 
 
 class EdgeTPUModel(_model.Model):
+    '''
+    This class works with tflite models on CPU and with quantized tflite models on Google Coral Edge TPU.
+
+    Using this class requires some libraries to be installed. See :ref:`installation`.
+    '''
     def __init__(
         self,
-        model_path,
+        model_path: str,
         device='CPU'
     ):
         '''
-        input:
-        - model_path: str
-            url or path to the tflite model
-        - device: str
-            "CPU" by default.
-            Set "TPU" or "TPU:0" to use the first EdgeTPU device.
-            Set "TPU:1" to use the second EdgeTPU device etc.
+        :parameter model_path: URL or path to the tflite model
+        :parameter device: str.
+            ``CPU`` by default.
+            Set ``TPU`` or ``TPU:0`` to use the first EdgeTPU device.
+            Set ``TPU:1`` to use the second EdgeTPU device etc.
         '''
         super().__init__()
         # Download file from internet
@@ -32,22 +35,15 @@ class EdgeTPUModel(_model.Model):
             model_path = _utils.file_from_url(model_path, 'models')
         # Create interpreter
         assert device == 'CPU' or device.split(':')[0] == 'TPU' or device[0] == ':'
-        self.interpreter = self.make_interpreter(model_path, device)
+        self.interpreter = self._make_interpreter(model_path, device)
         self.interpreter.allocate_tensors()
 
     def forward(self, *inputs, return_info=False):
-        '''
-        input:
-        - *inputs: list of arguments
-            Input numpy arrays
-        - return_time: bool
-            If True, will return inference time
-        '''
         assert len(inputs) == self.n_inputs
         start = time.time()
         # Put input tensors into model
         for i in range(self.n_inputs):
-            tensor = self.input_tensor(i)
+            tensor = self._input_tensor(i)
             tensor[:, :, :, :] = inputs[i]
             del tensor
         before_invoke = time.time()
@@ -55,7 +51,7 @@ class EdgeTPUModel(_model.Model):
         self.interpreter.invoke()
         after_invoke = time.time()
         # Get results from the model
-        results = [self.output_tensor(i) for i in range(self.n_outputs)]
+        results = [self._output_tensor(i) for i in range(self.n_outputs)]
         # Process output a little
         if self.n_outputs == 1:
             results = results[0]
@@ -90,7 +86,7 @@ class EdgeTPUModel(_model.Model):
         ]
 
     @staticmethod
-    def make_interpreter(model_file, device='CPU'):
+    def _make_interpreter(model_file, device='CPU'):
         ' Load model and create tflite interpreter '
         try:
             import tflite_runtime.interpreter as tflite
@@ -128,14 +124,14 @@ class EdgeTPUModel(_model.Model):
             return tflite.Interpreter(
                 model_path=model_file)
 
-    def input_tensor(self, i=0):
+    def _input_tensor(self, i=0):
         '''
         Returns input tensor view as function returning numpy array
         '''
         tensor_index = self.interpreter.get_input_details()[i]['index']
         return self.interpreter.tensor(tensor_index)()
 
-    def output_tensor(self, i=0):
+    def _output_tensor(self, i=0):
         """Returns output tensor view."""
         tensor_index = self.interpreter.get_output_details()[i]['index']
         tensor = self.interpreter.get_tensor(tensor_index)

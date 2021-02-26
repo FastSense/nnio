@@ -5,30 +5,46 @@ from . import utils as _utils
 
 
 class ONNXModel(_model.Model):
+    '''
+    This class is used with saved onnx models.
+
+    Usage example::
+
+        # Create model
+        model = nnio.ONNXModel('path/to/model.onnx')
+        # Create preprocessor
+        preproc = nnio.Preprocessing(
+            resize=(300, 300),
+            dtype='uint8',
+            batch_dimension=True,
+            channels_first=True,
+        )
+
+        # Preprocess your numpy image
+        image = preproc(image_rgb)
+
+        # Make prediction
+        class_scores = model(image)
+
+
+    Using this class requires onnxruntime to be installed. See :ref:`installation`.
+    '''
     def __init__(
         self,
-        model_path,
+        model_path: str,
     ):
         '''
-        input:
-        - model_path: str
-            url or path to the .onnx model
+
+        :parameter model_path: URL or path to the .onnx model
         '''
         super().__init__()
         # Download file from internet
         if _utils.is_url(model_path):
             model_path = _utils.file_from_url(model_path, 'models')
         # Load model and create inference session
-        self.sess = self.make_interpreter(model_path)
+        self.sess = self._make_interpreter(model_path)
 
     def forward(self, *inputs, return_info=False):
-        '''
-        input:
-        - *inputs: list of arguments
-            Input numpy arrays
-        - return_time: bool
-            If True, will return inference time
-        '''
         assert len(inputs) == len(self.get_input_details())
         # List output names
         outputs = [
@@ -77,7 +93,7 @@ class ONNXModel(_model.Model):
         ]
 
     @staticmethod
-    def make_interpreter(model_path):
+    def _make_interpreter(model_path):
         'Load model and create inference session'
         import onnxruntime as rt
         sess = rt.InferenceSession(model_path)

@@ -6,6 +6,12 @@ from ... import onnx as _onnx
 
 
 class MobileNetV2(_model.Model):
+    '''
+    MobileNetV2 classifier trained on ImageNet
+
+    Model is taken from the `ONNX Model Zoo <https://github.com/onnx/models>`_.
+    '''
+
     URL_MODEL = 'https://github.com/onnx/models/raw/master/vision/classification/mobilenet/model/mobilenetv2-7.onnx'
     URL_LABELS = 'https://github.com/onnx/models/raw/master/vision/classification/synset.txt'
 
@@ -19,12 +25,19 @@ class MobileNetV2(_model.Model):
 
         # Load labels from text file
         labels_path = _utils.file_from_url(self.URL_LABELS, 'labels')
-        self.labels = [
+        self._labels = [
             ' '.join(line.strip().split()[1:])
             for line in open(labels_path)
         ]
 
     def forward(self, image, return_scores=False):
+        '''
+        :parameter image: np array.
+            Input image
+        :parameter return_scores: bool.
+            If ``True``, return class scores.
+        :return: ``str``: class label.
+        '''
         scores = self.model(image)[0]
         label = self.labels[scores.argmax()]
         if return_scores:
@@ -43,3 +56,10 @@ class MobileNetV2(_model.Model):
             batch_dimension=True,
             channels_first=True,
         )
+
+    @property
+    def labels(self):
+        '''
+        :return: list of ImageNet classification labels
+        '''
+        return self._labels
