@@ -57,7 +57,7 @@ def main():
         print('Average inference time: {:.02f} ms'.format(time_avg * 1000))
         print('Average summary time: {:.02f} ms'.format(time_all * 1000))
 
-        percentiles = [0, 50, 99, 100]
+        percentiles = [0, 50, 95, 99, 100]
         results = np.percentile(times, percentiles)
         print('Percentiles:')
         for p, res in zip(percentiles, results):
