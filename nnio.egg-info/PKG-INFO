@@ -1,13 +1,12 @@
 Metadata-Version: 2.1
 Name: nnio
-Version: 0.2.4.3
+Version: 0.2.4.4
 Summary: Neural network inference on accelerators simplified
 Home-page: https://github.com/FastSense/nnio
 Author: Ruslan Baynazarov
 Author-email: ruslan.baynazarov@fastsense.tech
 License: MIT
-Description: # nnio
-        
+Description: 
         Please refer to the [project's documentation](https://nnio.readthedocs.io/).
         
         ## What is it
@@ -16,8 +15,8 @@ Description: # nnio
         
         It supports running models on CPU as well as some of the edge devices:
         
-        * Google USB Accelerator
-        * Intel Compute Stock
+        * [Google USB Accelerator](https://coral.ai/products/accelerator/)
+        * [Intel Compute Stick](https://www.intel.ru/content/www/ru/ru/products/boards-kits/compute-stick.html)
         * Intel integrated GPUs
         
         For each device there exists an own library and a model format. We wrap all those in a single well-defined python package.
@@ -53,5 +52,6 @@ Description: # nnio
         * an integrated Intel GPU
         
         [More usage examples](https://nnio.readthedocs.io/en/latest/basic_usage.html) can be found in the [documentation](https://nnio.readthedocs.io/).
+        
 Platform: UNKNOWN
 Description-Content-Type: text/markdown
