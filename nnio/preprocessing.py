@@ -48,13 +48,15 @@ class Preprocessing(_model.Model):
         '''
         :parameter resize: ``None`` or ``tuple``.
             (width, height) - the new size of image
-        :parameter dtype: ``str`` on ``np.dtype``.
+        :parameter dtype: ``str`` or ``np.dtype``.
             Data type
-        :parameter means: ``float`` or ``list`` or ``None``.
+        :parameter divide_by_255: ``bool``.
+            Divide input image by 255. This is applied before ``means``, ``stds`` and ``scales``.
+        :parameter means: ``float`` or iterable or ``None``.
             Substract these values from each channel
-        :parameter stds: `float`` or ``list`` or ``None``.
+        :parameter stds: `float`` or iterable or ``None``.
             Divide each channel by these values
-        :parameter scales: ``float`` or ``list`` or ``None``.
+        :parameter scales: ``float`` or iterable or ``None``.
             Multipy each channel by these values
         :parameter padding: ``bool``.
             If ``True``, images will be resized with the same aspect ratio

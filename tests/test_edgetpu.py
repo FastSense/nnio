@@ -2,6 +2,7 @@ import argparse
 import cv2
 import nnio
 import time
+import numpy as np
 
 
 def main():
@@ -55,6 +56,12 @@ def main():
         time_all = (end - start) / len(times)
         print('Average inference time: {:.02f} ms'.format(time_avg * 1000))
         print('Average summary time: {:.02f} ms'.format(time_all * 1000))
+
+        percentiles = [0, 50, 95, 99, 100]
+        results = np.percentile(times, percentiles)
+        print('Percentiles:')
+        for p, res in zip(percentiles, results):
+            print('{}%: {:.02f} ms'.format(p, res * 1000))
 
 if __name__ == '__main__':
     main()
