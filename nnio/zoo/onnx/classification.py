@@ -30,20 +30,28 @@ class MobileNetV2(_model.Model):
             for line in open(labels_path)
         ]
 
-    def forward(self, image, return_scores=False):
+    def forward(self, image, return_scores=False, return_info=False):
         '''
         :parameter image: np array.
             Input image
         :parameter return_scores: bool.
             If ``True``, return class scores.
+        :parameter return_info: bool.
+            If ``True``, return inference time.
         :return: ``str``: class label.
         '''
-        scores = self.model(image)[0]
+        scores = self.model(image, return_info=return_info)
+        if return_info:
+            scores, info = scores
+        scores = scores[0]
         label = self.labels[scores.argmax()]
         if return_scores:
+            if return_info:
+                return label, scores, info
             return label, scores
-        else:
-            return label
+        if return_info:
+            return label, info
+        return label
 
     def get_preprocessing(self):
         return _preprocessing.Preprocessing(

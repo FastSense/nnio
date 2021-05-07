@@ -10,17 +10,13 @@ def main():
         description='Measure inference time on dummy image input'
     )
     parser.add_argument(
-        '--device', type=str, default='CPU',
-        required=False,
-        help='Device. CPU or TPU. Set TPU:0 or TPU:1 to use specific device.')
-    parser.add_argument(
         '--speed_test_iters', type=int, default=0,
         required=False,
         help='Number of iterations to test speed.')
     args = parser.parse_args()
 
     # Load models
-    model = nnio.zoo.edgetpu.detection.SSDMobileNet(device=args.device)
+    model = nnio.zoo.onnx.detection.SSDMobileNetV1()
 
     # Get preprocessing function
     preproc = model.get_preprocessing()
@@ -41,7 +37,7 @@ def main():
 
     # Write result
     # pylint: disable=no-member
-    cv2.imwrite('results/edgetpu_ssd.png', image_rgb[:,:,::-1])
+    cv2.imwrite('results/onnx_ssd.png', image_rgb[:,:,::-1])
 
     # Measure inference time
     if args.speed_test_iters > 0:
@@ -63,6 +59,6 @@ def main():
         for p, res in zip(percentiles, results):
             print('{}%: {:.02f} ms'.format(p, res * 1000))
 
+
 if __name__ == '__main__':
     main()
-

@@ -33,13 +33,18 @@ class SSDMobileNetV1(_model.Model):
             for line in open(labels_path)
         ]
 
-    def forward(self, image):
+    def forward(self, image, return_info=False):
         '''
         :parameter image: np array.
             Input image
+        :parameter return_info: bool.
+            If ``True``, return inference time.
         :return: list of :class:`nnio.DetectionBox`
         '''
-        boxes, classes, scores, num_detections = self.model(image)
+        results = self.model(image, return_info=return_info)
+        if return_info:
+            results, info = results
+        boxes, classes, scores, num_detections = results
         # Parse output
         classes = classes - 1
         out_boxes = []
@@ -50,7 +55,10 @@ class SSDMobileNetV1(_model.Model):
             out_boxes.append(
                 _output.DetectionBox(x_min, y_min, x_max, y_max, label, score)
             )
-        return out_boxes
+        if return_info:
+            return out_boxes, info
+        else:
+            return out_boxes
 
     def get_preprocessing(self):
         return _preprocessing.Preprocessing(
