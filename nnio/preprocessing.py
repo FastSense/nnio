@@ -143,7 +143,7 @@ class Preprocessing(_model.Model):
         # Download image if path is url
         is_url = _utils.is_url(path)
         if is_url:
-            path = _utils.file_from_url(path, 'temp')
+            path = _utils.file_from_url(path, 'temp', use_cached=False)
         # Read image
         # pylint: disable=no-member
         image = cv2.imread(path)
