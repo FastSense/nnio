@@ -17,9 +17,9 @@ def is_url(s):
     '''
     Check if input string is url or not
     '''
-    return s.startswith('http://') or s.startswith('https://')
+    return (s.startswith('http://') or s.startswith('https://')) and len(s.split()) == 1
 
-def file_from_url(url, category='other'):
+def file_from_url(url, category='other', file_name=None, use_cached=True):
     '''
     Downloads file to "/home/$USER/.cache/nnio/" if it does not exist already.
     Returns path to the file
@@ -33,17 +33,17 @@ def file_from_url(url, category='other'):
         '.'.join(__version__.split('.')[:2]),
         category,
     )
-    # Create path if not exists
+    # Create path if it does not exist
     if not os.path.exists(base_path):
         pathlib.Path(base_path).mkdir(parents=True, exist_ok=True)
     # Get file path
-    file_name = url.split('/')[-1]
+    file_name = file_name or url.split('/')[-1]
     file_path = os.path.join(
         base_path,
         file_name
     )
     # Download file from the url
-    if not os.path.exists(file_path):
+    if not os.path.exists(file_path) or not use_cached:
         print('Downloading file from: {}'.format(url))
         urllib.request.urlretrieve(url, file_path)
         print('Downloaded to: {}'.format(file_path))
