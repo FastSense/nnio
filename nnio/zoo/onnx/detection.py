@@ -44,11 +44,11 @@ class SSDMobileNetV1(_model.Model):
         classes = classes - 1
         out_boxes = []
         for i in range(int(num_detections[0])):
-            x_1, y_1, x_2, y_2 = boxes[0, i]
+            y_min, x_min, y_max, x_max = boxes[0, i]
             label = self.labels[int(classes[0, i])]
             score = scores[0, i]
             out_boxes.append(
-                _output.DetectionBox(x_1, y_1, x_2, y_2, label, score)
+                _output.DetectionBox(x_min, y_min, x_max, y_max, label, score)
             )
         return out_boxes
 

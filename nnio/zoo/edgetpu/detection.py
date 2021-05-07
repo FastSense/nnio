@@ -71,11 +71,11 @@ class SSDMobileNet(_model.Model):
         for i in range(len(boxes[0])):
             if scores[0, i] < self.threshold:
                 continue
-            x_1, y_1, x_2, y_2 = boxes[0, i]
+            y_min, x_min, y_max, x_max = boxes[0, i]
             label = self.labels[int(classes[0, i])]
             score = scores[0, i]
             out_boxes.append(
-                _output.DetectionBox(x_1, y_1, x_2, y_2, label, score)
+                _output.DetectionBox(x_min, y_min, x_max, y_max, label, score)
             )
         if return_info:
             return out_boxes, info
@@ -150,11 +150,11 @@ class SSDMobileNetFace(_model.Model):
         for i in range(len(boxes[0])):
             if scores[0, i] < self.threshold:
                 continue
-            x_1, y_1, x_2, y_2 = boxes[0, i]
+            y_min, x_min, y_max, x_max = boxes[0, i]
             label = 'face'
             score = scores[0, i]
             out_boxes.append(
-                _output.DetectionBox(x_1, y_1, x_2, y_2, label, score)
+                _output.DetectionBox(x_min, y_min, x_max, y_max, label, score)
             )
         if return_info:
             return out_boxes, info
