@@ -14,13 +14,13 @@ class DetectionBox:
         '''
         
         :parameter x_min: ``float`` in range ``[0, 1]``.
-            Relative x coordinate of top-left corner.
+            Relative x (width) coordinate of top-left corner.
         :parameter y_min: ``float`` in range ``[0, 1]``.
-            Relative y coordinate of top-left corner.
+            Relative y (height) coordinate of top-left corner.
         :parameter x_max: ``float`` in range ``[0, 1]``.
-            Relative x coordinate of bottom-right corner.
+            Relative x (width) coordinate of bottom-right corner.
         :parameter y_max: ``float`` in range ``[0, 1]``.
-            Relative y coordinate of bottom-right corner.
+            Relative y (height) coordinate of bottom-right corner.
         :parameter label: ``str`` or ``None``.
             Class label of the detected object.
         :parameter score: ``float``.
