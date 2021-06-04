@@ -4,32 +4,32 @@ import cv2
 class DetectionBox:
     def __init__(
         self,
-        x_1,
-        y_1,
-        x_2,
-        y_2,
+        x_min,
+        y_min,
+        x_max,
+        y_max,
         label=None,
         score=1.0,
     ):
         '''
         
-        :parameter x_1: ``float`` in range ``[0, 1]``.
-            Relative x coordinate of top-left corner.
-        :parameter y_1: ``float`` in range ``[0, 1]``.
-            Relative y coordinate of top-left corner.
-        :parameter x_2: ``float`` in range ``[0, 1]``.
-            Relative x coordinate of bottom-right corner.
-        :parameter y_2: ``float`` in range ``[0, 1]``.
-            Relative y coordinate of bottom-right corner.
+        :parameter x_min: ``float`` in range ``[0, 1]``.
+            Relative x (width) coordinate of top-left corner.
+        :parameter y_min: ``float`` in range ``[0, 1]``.
+            Relative y (height) coordinate of top-left corner.
+        :parameter x_max: ``float`` in range ``[0, 1]``.
+            Relative x (width) coordinate of bottom-right corner.
+        :parameter y_max: ``float`` in range ``[0, 1]``.
+            Relative y (height) coordinate of bottom-right corner.
         :parameter label: ``str`` or ``None``.
             Class label of the detected object.
         :parameter score: ``float``.
             Detection score
         '''
-        self.x_1 = x_1
-        self.x_2 = x_2
-        self.y_1 = y_1
-        self.y_2 = y_2
+        self.x_min = x_min
+        self.y_min = y_min
+        self.x_max = x_max
+        self.y_max = y_max
         self.label = label
         self.score = score
 
@@ -54,12 +54,12 @@ class DetectionBox:
         '''
         # Box corners:
         start_point = (
-            int(image.shape[1] * self.y_1),
-            int(image.shape[0] * self.x_1),
+            int(image.shape[1] * self.x_min),
+            int(image.shape[0] * self.y_min),
         )
         end_point = (
-            int(image.shape[1] * self.y_2),
-            int(image.shape[0] * self.x_2),
+            int(image.shape[1] * self.x_max),
+            int(image.shape[0] * self.y_max),
         )
         # Draw rectangle
         # pylint: disable=no-member
@@ -81,10 +81,13 @@ class DetectionBox:
         return image
 
     def __str__(self):
-        template = 'nnio.DetectionBox(x_1={}, y_1={}, x_2={}, y_2={}, label={}, score={})'
+        template = 'nnio.DetectionBox(x_min={}, y_min={}, x_max={}, y_max={}, label={}, score={})'
         s = template.format(
-            self.x_1, self.y_1,
-            self.x_2, self.y_2,
+            self.x_min,
+            self.y_min,
+            self.x_max,
+            self.y_max,
             self.label,
-            self.score)
+            self.score
+        )
         return s

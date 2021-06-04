@@ -70,12 +70,12 @@ class SSDMobileNetV2(_model.Model):
         # Parse output
         out_boxes = []
         for res in results[0, 0]:
-            _, label, score, y_1, x_1, y_2, x_2 = res
+            _, label, score, x_min, y_min, x_max, y_max = res
             if score < self.threshold:
                 continue
             label = self.labels[int(label) - 1]
             out_boxes.append(
-                _output.DetectionBox(x_1, y_1, x_2, y_2, label, score)
+                _output.DetectionBox(x_min, y_min, x_max, y_max, label, score)
             )
         if return_info:
             return out_boxes, info

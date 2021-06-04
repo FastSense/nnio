@@ -13,17 +13,31 @@ PACKAGE_NAME = 'nnio'
 LOG_TEMPERATURE = False
 temperature_files = {}
 
+URL_MARKERS = ['http://', 'https://']
+
 def is_url(s):
     '''
     Check if input string is url or not
     '''
-    return s.startswith('http://') or s.startswith('https://')
+    # Url is always one word
+    if len(s.split()) != 1:
+        return False
+    # Url starts with some specific prefix
+    for marker in URL_MARKERS:
+        if s.startswith(marker):
+            return True
+    return False
 
-def file_from_url(url, category='other'):
+def file_from_url(url, category='other', file_name=None, use_cached=True):
     '''
     Downloads file to "/home/$USER/.cache/nnio/" if it does not exist already.
     Returns path to the file
     '''
+    # Remove prefix from url
+    url_path = url
+    for marker in URL_MARKERS:
+        url_path = url_path.replace(marker, '')
+    url_path = '/'.join(url_path.split('/')[:-1])
     # Get base path for file
     base_path = os.path.join(
         '/home',
@@ -32,18 +46,19 @@ def file_from_url(url, category='other'):
         PACKAGE_NAME,
         '.'.join(__version__.split('.')[:2]),
         category,
+        url_path,
     )
-    # Create path if not exists
+    # Create path if it does not exist
     if not os.path.exists(base_path):
         pathlib.Path(base_path).mkdir(parents=True, exist_ok=True)
     # Get file path
-    file_name = url.split('/')[-1]
+    file_name = file_name or url.split('/')[-1]
     file_path = os.path.join(
         base_path,
         file_name
     )
     # Download file from the url
-    if not os.path.exists(file_path):
+    if not os.path.exists(file_path) or not use_cached:
         print('Downloading file from: {}'.format(url))
         urllib.request.urlretrieve(url, file_path)
         print('Downloaded to: {}'.format(file_path))

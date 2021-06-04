@@ -4,3 +4,4 @@ MANIFEST
 .vscode
 docs/build
 docs/source/_build
+nnio.egg-info

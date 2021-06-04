@@ -2,6 +2,7 @@ import argparse
 import cv2
 import nnio
 import time
+import numpy as np
 
 nnio.utils.enable_logging_temperature(True)
 
@@ -14,7 +15,7 @@ def main():
         required=False,
         help='Device. CPU, GPU or MYRIAD. Set MYRIAD:0 or MYRIAD:1 to use specific device.')
     parser.add_argument(
-        '--speed-test-iters', type=int, default=0,
+        '--speed_test_iters', type=int, default=0,
         required=False,
         help='Number of iterations to test speed.')
     args = parser.parse_args()
@@ -56,6 +57,12 @@ def main():
         time_all = (end - start) / len(times)
         print('Average inference time: {:.02f} ms'.format(time_avg * 1000))
         print('Average summary time: {:.02f} ms'.format(time_all * 1000))
+
+        percentiles = [0, 50, 95, 99, 100]
+        results = np.percentile(times, percentiles)
+        print('Percentiles:')
+        for p, res in zip(percentiles, results):
+            print('{}%: {:.02f} ms'.format(p, res * 1000))
 
 
 if __name__ == '__main__':
