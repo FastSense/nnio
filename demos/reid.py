@@ -43,8 +43,8 @@ def main():
                 # Crop this person image
                 h, w, _ = image_rgb.shape
                 crop = image_rgb[
-                    int(h * box.x_1): int(h * box.x_2),
-                    int(w * box.y_1): int(w * box.y_2)
+                    int(h * box.y_min): int(h * box.y_max),
+                    int(w * box.x_min): int(w * box.x_max)
                 ]
                 crop_prepared = reid_preproc(crop)
                 vec = reid(crop_prepared)
