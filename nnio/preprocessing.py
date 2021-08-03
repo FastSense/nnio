@@ -35,11 +35,13 @@ class Preprocessing(_model.Model):
     def __init__(
         self,
         resize=None,
-        dtype='uint8',
-        divide_by_255=False,
+        dtype=None,
+        divide_by_255=None,
         means=None,
         stds=None,
         scales=None,
+        imagenet_scaling=False,
+        to_gray=None,
         padding=False,
         channels_first=False,
         batch_dimension=False,
@@ -49,7 +51,7 @@ class Preprocessing(_model.Model):
         :parameter resize: ``None`` or ``tuple``.
             (width, height) - the new size of image
         :parameter dtype: ``str`` or ``np.dtype``.
-            Data type
+            Data type. By default will use ``uint8``.
         :parameter divide_by_255: ``bool``.
             Divide input image by 255. This is applied before ``means``, ``stds`` and ``scales``.
         :parameter means: ``float`` or iterable or ``None``.
@@ -58,6 +60,9 @@ class Preprocessing(_model.Model):
             Divide each channel by these values
         :parameter scales: ``float`` or iterable or ``None``.
             Multipy each channel by these values
+        :parameter imagenet_scaling (bool): apply imagenet scaling.
+            If this is specified, arguments ``divide_by_255``, ``means``, ``stds``, ``scales`` must be ``None``.
+        :parameter to_gray (None or int): if ``int``, then convert rgb image to grayscale with specified number of channels (usually 1 or 3).
         :parameter padding: ``bool``.
             If ``True``, images will be resized with the same aspect ratio
         :parameter channels_first: ``bool``.
@@ -70,8 +75,8 @@ class Preprocessing(_model.Model):
             If ``False``, keep the RGB order.
         '''
         self.resize = resize
-        self.dtype = dtype
-        self.divide_by_255 = divide_by_255
+        self.dtype = dtype or 'uint8'
+        self.divide_by_255 = divide_by_255 or False
         if divide_by_255:
             MSG = 'If dividing image by 255, specify float data type'
             assert 'float' in dtype, MSG
@@ -80,10 +85,45 @@ class Preprocessing(_model.Model):
             raise BaseException('Either scales or stds may be specified, not both')
         self.stds = stds
         self.scales = scales
+        self.to_gray = to_gray
+        assert to_gray is None or isinstance(to_gray, int)
+        if to_gray is not None and to_gray <= 0 and channels_first:
+            raise BaseException('to_gray <= 0 means that there will be no channel dimension, but found channels_first=True')
         self.padding = padding
         self.channels_first = channels_first
         self.batch_dimension = batch_dimension
         self.bgr = bgr
+
+        if imagenet_scaling:
+            if (
+                divide_by_255 is not None
+                or
+                means is not None
+                or
+                stds is not None
+                or
+                scales is not None
+            ):
+                raise BaseException('If imagenet_scaling is True, then arguments divide_by_255, means, stds, scales must be None')
+            MSG = 'If imagenet_scaling is True, specify float data type'
+            assert dtype is None or 'float' in dtype, MSG
+            if dtype is None:
+                self.dtype = 'float32'
+            self.means = [123.675, 116.28, 103.53]
+            self.stds = [58.395, 57.12, 57.375]
+        
+        # Optimize
+        self._scales = None if self.scales is None else np.array(self.scales)[None, None]
+        self._means = None if self.means is None else np.array(self.means)[None, None]
+        if self.stds is not None:
+            self._scales = 1 / np.array(self.stds)[None, None]
+        if self.divide_by_255:
+            if self._scales is not None:
+                self._scales = self._scales / 255
+            else:
+                self._scales = 1 / 255
+            if self._means is not None:
+                self._means = self._means * 255
 
     def forward(self, image, return_original=False):
         '''
@@ -111,17 +151,17 @@ class Preprocessing(_model.Model):
         if self.resize is not None:
             image = self._resize_image(image, self.resize, self.padding)
 
-        # Divide by 255
-        if self.divide_by_255:
-            image = image / 255
-
         # Shift and scale
-        if self.means is not None:
-            image = image - np.array(self.means)[None, None]
-        if self.stds is not None:
-            image = image / np.array(self.stds)[None, None]
-        if self.scales is not None:
-            image = image * np.array(self.scales)[None, None]
+        if self._means is not None:
+            image = image - self._means
+        if self._scales is not None:
+            image = image * self._scales
+
+        # Convert to grayscale
+        if self.to_gray is not None:
+            image = image.mean(2, keepdim=self.to_gray > 0)
+            if self.to_gray > 1:
+                image = image.repeat(self.to_gray, axis=2)
 
         # Change shape
         if self.channels_first:
