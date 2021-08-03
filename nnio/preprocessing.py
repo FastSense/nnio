@@ -241,7 +241,7 @@ class Preprocessing(_model.Model):
         '''
         :return: full description of the ``Preprocessing`` object
         '''
-        s = 'nnio.Preprocessing(resize={}, dtype={}, divide_by_255={}, means={}, stds={}, scales={}, padding={}, channels_first={}, batch_dimension={}, bgr={})'
+        s = 'nnio.Preprocessing(resize={}, dtype={}, divide_by_255={}, means={}, stds={}, scales={}, to_gray={}, padding={}, channels_first={}, batch_dimension={}, bgr={})'
         s = s.format(
             self.resize,
             self.dtype,
@@ -249,6 +249,7 @@ class Preprocessing(_model.Model):
             self.means,
             self.stds,
             self.scales,
+            self.to_gray,
             self.padding,
             self.channels_first,
             self.batch_dimension,
