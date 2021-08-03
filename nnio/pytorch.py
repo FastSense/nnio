@@ -34,12 +34,12 @@ class TorchModel(_model.Model):
     def __init__(
         self,
         model_path: str,
-        device: str='CPU',
+        device: str='cpu',
     ):
         '''
 
         :parameter model_path (str): URL or path to the .onnx model
-        :parameter device (str): Can be either ``CPU`` or ``GPU``.
+        :parameter device (str): Can be either ``cpu`` or ``cuda``.
         '''
         super().__init__()
         self.device = device
@@ -50,7 +50,10 @@ class TorchModel(_model.Model):
 
         import torch
         self.torch = torch
-        self.model = torch.jit.load(model_path)
+        try:
+            self.model = torch.jit.load(model_path)
+        except:
+            self.model = torch.load(model_path)
         self.model.to(device)
         self.model.eval()
 

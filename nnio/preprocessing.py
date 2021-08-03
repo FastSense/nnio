@@ -159,7 +159,7 @@ class Preprocessing(_model.Model):
 
         # Convert to grayscale
         if self.to_gray is not None:
-            image = image.mean(2, keepdim=self.to_gray > 0)
+            image = image.mean(2, keepdims=self.to_gray > 0)
             if self.to_gray > 1:
                 image = image.repeat(self.to_gray, axis=2)
 
