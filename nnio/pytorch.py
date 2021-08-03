@@ -38,8 +38,8 @@ class TorchModel(_model.Model):
     ):
         '''
 
-        :parameter model_path (str): URL or path to the .onnx model
-        :parameter device (str): Can be either ``cpu`` or ``cuda``.
+        :parameter model_path: URL or path to the torchscript model
+        :parameter device: Can be either ``cpu`` or ``cuda``.
         '''
         super().__init__()
         self.device = device

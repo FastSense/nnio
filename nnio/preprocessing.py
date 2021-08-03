@@ -60,10 +60,10 @@ class Preprocessing(_model.Model):
             Divide each channel by these values
         :parameter scales: ``float`` or iterable or ``None``.
             Multipy each channel by these values
-        :parameter imagenet_scaling (bool): apply imagenet scaling.
+        :parameter imagenet_scaling: apply imagenet scaling.
             It is equivalent to ``divide_by_255=True, means=[0.485, 0.456, 0.406], stds=[0.229, 0.224, 0.225]``.
             If this is specified, arguments ``divide_by_255``, ``means``, ``stds``, ``scales`` must be ``None``.
-        :parameter to_gray (None or int): if ``int``, then convert rgb image to grayscale with specified number of channels (usually 1 or 3).
+        :parameter to_gray: if ``int``, then convert rgb image to grayscale with specified number of channels (usually 1 or 3).
         :parameter padding: ``bool``.
             If ``True``, images will be resized with the same aspect ratio
         :parameter channels_first: ``bool``.
