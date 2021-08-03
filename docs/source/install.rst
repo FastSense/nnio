@@ -9,7 +9,7 @@ Basic installation is simple:
 
     pip install nnio
 
-To use one of three backends, additional installs are needed:
+To use one of backends, additional installs are needed:
 
 ONNX
 -------------
@@ -45,3 +45,14 @@ The following command allows to pass all Myriad and GPU devices into docker cont
     -v /etc/timezone:/etc/timezone:ro \
     -v /etc/localtime:/etc/localtime:ro \
     -v "$(pwd):/input" openvino/ubuntu18_runtime
+
+Torch
+-----
+
+To work with saved torch models, :code:`torch` package needs to be installed. It weights around 0.8 GB, hense it is recommended to use other backends instead.
+
+To install :code:`torch`:
+
+.. code-block:: bash
+
+    pip3 install torch

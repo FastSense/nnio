@@ -9,6 +9,7 @@ from .model import Model
 from .edgetpu import EdgeTPUModel
 from .openvino import OpenVINOModel
 from .onnx import ONNXModel
+from .pytorch import TorchModel
 
 # Preprocessing class
 from .preprocessing import Preprocessing
