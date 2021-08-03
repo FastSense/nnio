@@ -7,11 +7,12 @@ Basic Usage
 Using your saved models
 ===========================
 
-nnio provides three classes for loading models in different formats:
+nnio provides four classes for loading models in different formats:
 
 * :class:`nnio.ONNXModel`
 * :class:`nnio.EdgeTPUModel`
 * :class:`nnio.OpenVINOModel`
+* :class:`nnio.TorchModel`
 
 Loaded models can be simply called as functions on numpy arrays. Look at the example:
 
@@ -54,5 +55,9 @@ Description of the basic model classes
 
 
 .. autoclass:: nnio.OpenVINOModel
+    :members:
+    :special-members:
+
+.. autoclass:: nnio.TorchModel
     :members:
     :special-members:
