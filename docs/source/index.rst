@@ -2,7 +2,7 @@
 What is it
 **************
 
-**nnio** is a light-weight python package for easily running neural networks.
+Very simple python API for inferencing neural networks. Ideal for sharing your models with colleagues who are not data scientists.
 
 It supports running models on CPU as well as some of the edge devices:
 
