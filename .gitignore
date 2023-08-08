@@ -5,3 +5,4 @@ MANIFEST
 docs/build
 docs/source/_build
 nnio.egg-info
+poetry.lock
