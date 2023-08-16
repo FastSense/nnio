@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nnio"
-version = "0.3.1.2"
+version = "0.4.0"
 description = "Neural network inference on accelerators simplified"
 authors = ["Ruslan Baynazarov <ruslan.baynazarov@fastsense.tech>"]
 packages = [{include = "nnio"}]
